@@ -223,7 +223,7 @@
     <div class="main-card" onclick="window.goToGrid()">
       <div class="main-icon" data-icon-id="landing"></div>
       <div class="main-title">Past Simple vs Past Perfect</div>
-      <div class="main-sub">62 questions · 8 stations · Full drill</div>
+      <div class="main-sub"><span id="main-sub-total"></span> questions · 8 stations </div>
       <button class="pill-btn">Start Drill</button>
     </div>
   </div>
@@ -233,7 +233,7 @@
   <div id="tracker-pill" class="tracker-pill hidden">
     <button class="back-btn" onclick="window.backToGrid()">← Blocks</button>
     <div style="width:1px; height:16px; background:var(--accent-light);"></div>
-    <span id="tracker-q">Q 0/62</span><span id="tracker-c">✅ 0</span>
+    <span id="tracker-q">Q 0/<span id="tracker-total"></span></span>
   </div>
   <div id="final-screen" class="hidden final-screen">
     <div class="score-ring"><svg viewBox="0 0 160 160"><circle class="ring-bg" cx="80" cy="80" r="70"/><circle class="ring-fill" cx="80" cy="80" r="70"/></svg><div class="score-text" id="final-score-display">0%</div></div>
@@ -456,6 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.initThemes();
   window.loadProgress();
   window.renderGrid();
+  window.updateTracker(); // ← ДОБАВЬТЕ ЭТУ СТРОКУ
   document.getElementById('student-name').addEventListener('input', e => {
     studentName = e.target.value.trim();
     document.getElementById('main-title').innerHTML = studentName ? `Hello, <span>${studentName}</span>! Ready to drill?` : `Welcome! What are you practising today?`;
@@ -758,6 +759,12 @@ window.updateTracker = function() {
   globalStats.c = Object.values(stationProgress).reduce((sum,p) => sum + p.correct, 0);
   document.getElementById('tracker-q').textContent = `Q ${globalStats.q}/${globalStats.total}`;
   document.getElementById('tracker-c').textContent = `✅ ${globalStats.c}`;
+  // Обновляем отображение общего количества вопросов в двух местах
+  const totalEl1 = document.getElementById('tracker-total');
+  const totalEl2 = document.getElementById('main-sub-total');
+  if (totalEl1) totalEl1.textContent = globalStats.total;
+  if (totalEl2) totalEl2.textContent = globalStats.total;
+  // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 }
 window.retryStation = function(id) {
   const s = stations.find(x=>x.id===id);
