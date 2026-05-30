@@ -446,7 +446,7 @@ window.applyTheme = function(name) {
     const id = parseInt(el.getAttribute('data-icon-id'));
     const idx = iconMap[id];
     // Fallback to default icon if index is out of bounds or empty
-    const fallbacks = { blossom: '🌸', dusk: '💜', sage: '🌿', slate: '🔹' }; el.textContent = (icons[idx] && icons[idx] !== '') ? icons[idx] : (fallbacks[name] || '🌏');
+    const fallbacks = { blossom: '🌸', dusk: '💜', sage: '🌿', slate: '🌏' }; el.textContent = (icons[idx] && icons[idx] !== '') ? icons[idx] : (fallbacks[name] || '🌏');
   });
 }
 
