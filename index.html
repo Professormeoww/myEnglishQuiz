@@ -277,7 +277,7 @@
 
   <!-- 2. Экран выбора урока -->
   <div id="lesson-menu-screen" class="hidden landing-screen">
-    <h1 class="hero-text">📚 English Grammar Course</h1>
+    <h1 class="hero-text">English Grammar Course</h1>
     <p class="subtitle">Choose a topic to start practising</p>
     <div id="lesson-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 0 20px; max-width: 1000px; margin: 0 auto;"></div>
   </div>
@@ -311,6 +311,7 @@
 <script>
 // 📚 БИБЛИОТЕКА УРОКОВ (добавляйте новые темы сюда)
 const COURSE = {
+  desc: "Master Past Simple vs Past Perfect through interactive drills.", // ← Общее описание курса
   past_tenses: [
     { id:1, title:"Multiple Choice", subtitle:"6 questions · Recognition", type:"mc", desc:"Выберите один грамматически верный вариант.", q:[
       {t:"We rushed to the cinema, but... By the time we arrived, the film ___ .", opts:["started","had started","was starting","has started"], c:1, ok:"`By the time` создаёт «дедлайн» в прошлом → действие уже завершилось.", err:"By the time требует акцента на завершённости до указанного момента."},
@@ -547,10 +548,10 @@ window.renderLessonMenu = function() {
     
     const topicName = key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
     card.innerHTML = `
-      <h3>${topicName}</h3>
-      <p>${lesson[0]?.desc || 'Grammar practice'}</p>
-      <div class="meta">${total} questions · ${lesson.length} stations</div>
-    `;
+  <h3>${topicName}</h3>
+  <p>${lesson.desc || 'Comprehensive grammar practice'}</p>
+  <div class="meta">${total} questions · ${lesson.stations.length} stations</div>
+`;
     list.appendChild(card);
   });
 };
