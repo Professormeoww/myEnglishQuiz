@@ -311,8 +311,9 @@
 <script>
 // 📚 БИБЛИОТЕКА УРОКОВ (добавляйте новые темы сюда)
 const COURSE = {
-  desc: "Master Past Simple vs Past Perfect through interactive drills.", // ← Общее описание курса
-  past_tenses: [
+  past_tenses: {
+    desc: "Master Past Simple vs Past Perfect through interactive drills.",
+    stations: [
     { id:1, title:"Multiple Choice", subtitle:"6 questions · Recognition", type:"mc", desc:"Выберите один грамматически верный вариант.", q:[
       {t:"We rushed to the cinema, but... By the time we arrived, the film ___ .", opts:["started","had started","was starting","has started"], c:1, ok:"`By the time` создаёт «дедлайн» в прошлом → действие уже завершилось.", err:"By the time требует акцента на завершённости до указанного момента."},
       {t:"I tried calling her, and... When I finally reached her, she ___ just _____ work.", opts:["has/finished","had/finished","was/finished","did/finish"], c:1, ok:"`Just` + завершение до звонка → Past Perfect.", err:"Действие завершилось ДО другого прошлого действия."},
@@ -458,7 +459,7 @@ const COURSE = {
 
 // 🔹 Активный урок и текущие данные
 let currentLesson = 'past_tenses';
-let stations = COURSE[currentLesson]; // Программа читает отсюда
+let stations = COURSE[currentLesson].stations; // ← теперь .stations
 
 // Fixed emoji arrays to prevent blank icons
 const themeConfig = {
@@ -536,7 +537,9 @@ window.renderLessonMenu = function() {
   
   Object.keys(COURSE).forEach(key => {
     const lesson = COURSE[key];
-    const total = lesson.reduce((sum, s) => {
+    const stations = lesson.stations; // ← теперь берём из .stations
+    
+    const total = stations.reduce((sum, s) => {
       if(s.type === 'match') return sum + s.q[0].pairs.length;
       if(s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
       return sum + (s.q ? s.q.length : 0);
@@ -548,17 +551,17 @@ window.renderLessonMenu = function() {
     
     const topicName = key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
     card.innerHTML = `
-  <h3>${topicName}</h3>
-  <p>${lesson.desc || 'Comprehensive grammar practice'}</p>
-  <div class="meta">${total} questions · ${lesson.stations.length} stations</div>
-`;
+      <h3>${topicName}</h3>
+      <p>${lesson.desc || 'Comprehensive grammar practice'}</p>
+      <div class="meta">${total} questions · ${stations.length} stations</div>
+    `;
     list.appendChild(card);
   });
 };
 
 window.selectLesson = function(lessonKey) {
   currentLesson = lessonKey;
-  stations = COURSE[lessonKey];
+  stations = COURSE[lessonKey].stations; // ← теперь .stations
   
   // Сброс прогресса для нового урока
   globalStats = { q:0, c:0, w:0, total: calculateTotal() };
