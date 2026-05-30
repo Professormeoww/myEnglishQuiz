@@ -322,21 +322,79 @@ const stations = [
       {type:"text", content:" the keys on my desk after I "},{type:"gap", hint:"(go)", kw:["had","gone","went"], m:["had gone","went"], note:"Past Perfect: уход произошёл ДО того, как коллега увидела ключи."}
     ], ok:"Excellent! You tracked the timeline perfectly.", err:"Tip: 'before/after' clauses help identify which action came first." }
   ]},
-  { id:8, title:"Translation RU→EN", subtitle:"5 sentences · Production", type:"trans", q:[
-    {t:"К тому моменту, как я пришёл, фильм уже начался.", kw:["by","time","arrived","film","had","already","started"], m:["By the time I arrived, the film had already started."], ok:"`By the time` + Past Perfect для завершённого действия.", err:"Обратите внимание на `had already started`."},
-    {t:"Пока я читал книгу, зазвонил телефон.", kw:["while","was","reading","book","phone","rang"], m:["While I was reading the book, the phone rang."], ok:"`While` + Past Continuous (длительное) + Past Simple (внезапное).", err:"Длительное действие прерывается."},
-    {t:"Они уже ушли до того, как я позвонил.", kw:["they","had","already","left","before","called"], m:["They had already left before I called."], ok:"`Before` не требует сдвига, но Past Perfect показывает раннее действие.", err:"`Had left` подчёркивает, что уход был раньше звонка."},
-    {t:"Я никогда не видел эту картину до вчерашнего дня.", kw:["had","never","seen","picture","until","yesterday"], m:["I had never seen this picture until yesterday."], ok:"`Never` + Past Perfect + маркер `until`.", err:"Порядок: had + never + V3."},
-    {t:"После того как она пообедала, она почувствовала сонливость.", kw:["after","had","eaten","lunch","felt","sleepy"], m:["After she had eaten lunch, she felt sleepy."], ok:"`After` + Past Simple/Past Perfect + результат.", err:"Past Perfect звучит точнее."}
-  ]}
-];
+{ id:8, title:"Translation RU→EN", subtitle:"8 sentences · Production", type:"trans", q:[
+  {
+    t:"Я не знал правду, пока он не сказал.", 
+    kw:["had","not","known","truth","until","he","said"], 
+    m:["I hadn't known the truth until he said.", "I had not known the truth until he said."], 
+    ok:"Not ... until + Past Perfect для состояния, которое длилось ДО момента.", 
+    err:"Используйте Past Perfect для части до 'until'.",
+    note:"Past Perfect (hadn't known) показывает, что незнание прекратилось ровно в момент его ухода."
+  },
+  {
+    t:"Как только она открыла окно, птица улетела.", 
+    kw:["as","soon","as","opened","window","bird","flew","away"], 
+    m:["As soon as she opened the window, the bird flew away.", "The bird flew away as soon as she opened the window."], 
+    ok:"As soon as + последовательность событий (Past Simple).", 
+    err:"Оба действия быстрые и идут друг за другом.",
+    note:"Здесь Past Simple в обеих частях, так как действия происходят мгновенно одно за другим."
+  },
+  {
+    t:"Пока я спускался по лестнице, я встретил соседа.", 
+    kw:["as","was","coming","down","stairs","met","neighbor"], 
+    m:["As I was coming down the stairs, I met my neighbor."], 
+    ok:"As + Past Continuous (процесс) + Past Simple (событие).", 
+    err:"Длительное действие прерывается встречей.",
+    note:"Past Continuous (was coming) — это фон, на котором произошло краткое действие (met)."
+  },
+  {
+    t:"Когда я вернулся в отель, я понял, что потерял ключи.", 
+    kw:["when","returned","hotel","realized","had","lost","keys"], 
+    m:["When I returned to the hotel, I realized I had lost my keys.", "I realized I had lost my keys when I returned to the hotel."], 
+    ok:"When + Past Perfect, так как потеря произошла ДО возвращения.", 
+    err:"Потеря случилась раньше, чем вы вернулись.",
+    note:"Past Perfect (had lost) объясняет ПРИЧИНУ состояния realized в прошлом."
+  },
+  {
+    t:"Когда она вошла в комнату, все замолчали.", 
+    kw:["when","entered","room","everyone","went","silent"], 
+    m:["When she entered the room, everyone went silent.", "Everyone went silent when she entered the room."], 
+    ok:"When + Past Simple для быстрой последовательности/реакции.", 
+    err:"Это реакция на вход, а не результат более раннего действия.",
+    note:"Past Simple в обеих частях: сначала вошла → после чего сразу все замолчали."
+  },
+  {
+    t:"К тому моменту, как полиция приехала, воры уже сбежали.", 
+    kw:["by","time","police","arrived","thieves","had","escaped"], 
+    m:["By the time the police arrived, the thieves had already escaped.", "The thieves had already escaped by the time the police arrived."], 
+    ok:"`By the time` + Past Perfect (завершение до дедлайна).", 
+    err:"Воры скрылись ДО приезда полиции.",
+    note:"Past Perfect подчеркивает, что к моменту приезда полиции воров уже не было на месте."
+  },
+  {
+    t:"Он был очень голоден, потому что не ел весь день.", 
+    kw:["was","hungry","because","had","not","eaten","all","day"], 
+    m:["He was very hungry because he hadn't eaten all day.", "He was very hungry because he had not eaten all day."], 
+    ok:"Причина состояния в прошлом → Past Perfect.", 
+    err:"Голод был результатом того, что он не ел РАНЬШЕ.",
+    note:"Past Perfect (hadn't eaten) объясняет причину прошлого состояния (was hungry)."
+  },
+  {
+    t:"Она не могла уснуть, потому что посмотрела страшный фильм.", 
+    kw:["could","not","sleep","because","had","watched","scary","movie"], 
+    m:["She couldn't sleep because she had watched a scary movie.", "She couldn't sleep because she had seen a scary movie."], 
+    ok:"Результат/состояние в прошлом из-за более раннего действия.", 
+    err:"Просмотр фильма произошел ДО того, как она не могла уснуть.",
+    note:"Past Perfect показывает, что просмотр фильма предшествовал бессоннице."
+  }
+]},
 
 // Fixed emoji arrays to prevent blank icons
 const themeConfig = {
-  blossom: { emojis:['🌸','','🔗','🔧','','💡','📚','🌍'] },
-  dusk:    { emojis:['💜','📝','🔗','','🧩','💡','','🌍'] },
-  sage:    { emojis:['🌿','📝','🔗','🔧','🧩','💡','📚','🌍'] },
-  slate:   { emojis:['🔹','📝','🔗','🔧','🧩','💡','📚',''] }
+  blossom: { emojis:['🌸','✏️','🔗','🔧','🧩','💡','📚','🌍'] },
+  dusk:    { emojis:['💜','🔍','🔗','🎯','🧩','💡','📚','✏'] },
+  sage:    { emojis:['🌿','✏️','🔗','🔧','🧩','💡','📚','💭'] },
+  slate:   { emojis:['🔹','🔍','🔗','🔧','🧩','💡','📚','💬'] }
 };
 const iconMap = { landing: 0, 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7 };
 let currentTheme = 'slate';
@@ -624,22 +682,46 @@ window.checkGap = function(stId, idx) {
   }
 }
 window.checkTrans = function(stId, idx) {
-  const q = stations.find(x=>x.id===stId).q[idx]; const inp = document.getElementById(`trans-${stId}-${idx}`);
-  const fb = document.getElementById(`fb-${stId}-${idx}`); const btn = inp.nextElementSibling; const qBlock = inp.closest('.q-block');
-  if(btn.disabled) return; btn.disabled = true;
+  const q = stations.find(x=>x.id===stId).q[idx]; 
+  const inp = document.getElementById(`trans-${stId}-${idx}`);
+  const fb = document.getElementById(`fb-${stId}-${idx}`); 
+  const btn = inp.nextElementSibling; 
+  const qBlock = inp.closest('.q-block');
+  
+  if(btn.disabled) return; 
+  btn.disabled = true;
+  
   const val = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
-  const match = q.kw.every(k => val.includes(k.toLowerCase()));
-  if(match) { inp.classList.add('correct'); fb.className='feedback show success'; fb.innerHTML=`🟢 Абсолютно верно! ${q.ok}`; triggerAnim(qBlock, true); window.recordAnswer(stId, true); }
+  
+  // Поддержка массива правильных ответов + проверка ключевых слов как фоллбэк
+  const normalize = s => s.toLowerCase().trim().replace(/\s+/g, ' ');
+  const models = Array.isArray(q.m) ? q.m : [q.m];
+  const match = models.some(m => normalize(m) === normalize(val)) || 
+                (q.kw && q.kw.every(k => val.includes(k.toLowerCase())));
+  
+  if(match) { 
+    inp.classList.add('correct'); 
+    fb.className = 'feedback show success'; 
+    fb.innerHTML = `🟢 Абсолютно верно! ${q.ok}`; 
+    triggerAnim(qBlock, true); 
+    window.recordAnswer(stId, true); 
+  }
   else { 
     inp.classList.add('wrong'); 
     const fbDiv = document.createElement('div');
     fbDiv.className = 'feedback show error';
     fbDiv.innerHTML = `🔴 Oops! Incorrect.`;
     const showBtn = document.createElement('button');
-    showBtn.className = 'btn-show'; showBtn.textContent = '️ Show Answer';
-    showBtn.onclick = function() { fbDiv.innerHTML = `Model: ${q.m}. → ${q.err}`; };
-    fbDiv.appendChild(showBtn); qBlock.appendChild(fbDiv);
-    triggerAnim(qBlock, false); window.recordAnswer(stId, false);
+    showBtn.className = 'btn-show'; 
+    showBtn.textContent = '👁️ Show Answer';
+    showBtn.onclick = function() { 
+      const modelText = Array.isArray(q.m) ? q.m[0] : q.m;
+      fbDiv.innerHTML = `Model: ${modelText}. → ${q.err || q.note || ''}`; 
+    };
+    fbDiv.appendChild(showBtn); 
+    qBlock.appendChild(fbDiv);
+    triggerAnim(qBlock, false); 
+    window.recordAnswer(stId, false); 
   }
 }
 window.renderWordOrderTiles = function(stId, idx, words, qBlock) {
