@@ -391,10 +391,10 @@ const stations = [
 
 // Fixed emoji arrays to prevent blank icons
 const themeConfig = {
-  blossom: { emojis:['🌸','✏️','🔗','🔧','🧩','💡','📚','🌍'] },
-  dusk:    { emojis:['💜','🔍','🔗','🎯','🧩','💡','📚','✏'] },
+  blossom: { emojis:['🌸','✏️','🔑','🔧','🧩','💡','🧠','🌍'] },
+  dusk:    { emojis:['💜','🔍','🔗','🎯','🧩','💡','📖','✏️'] },
   sage:    { emojis:['🌿','✏️','🔗','🔧','🧩','💡','📚','💭'] },
-  slate:   { emojis:['🔹','🔍','🔗','🔧','🧩','💡','📚','💬'] }
+  slate:   { emojis:['🌍','🔍','🧲','🔧','🧩','💡','📚','💬'] }
 };
 const iconMap = { landing: 0, 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7 };
 let currentTheme = 'slate';
@@ -446,7 +446,7 @@ window.applyTheme = function(name) {
     const id = parseInt(el.getAttribute('data-icon-id'));
     const idx = iconMap[id];
     // Fallback to default icon if index is out of bounds or empty
-    el.textContent = (icons[idx] && icons[idx] !== '') ? icons[idx] : (name === 'slate' ? '🔹' : '🌸');
+    const fallbacks = { blossom: '🌸', dusk: '💜', sage: '🌿', slate: '🔹' }; el.textContent = (icons[idx] && icons[idx] !== '') ? icons[idx] : (fallbacks[name] || '🌏');
   });
 }
 
