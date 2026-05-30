@@ -217,24 +217,40 @@
 </header>
 
 <div id="app" style="width: 100%;">
+  <!-- 1. Приветственный экран -->
   <div id="landing-screen" class="landing-screen">
     <h1 class="hero-text" id="main-title">Welcome! What are you practising today?</h1>
-    <p class="subtitle">Master Past Simple vs Past Perfect through interactive drills.</p>
-    <div class="main-card" onclick="window.goToGrid()">
+    <p class="subtitle">Master English Grammar through interactive drills.</p>
+    <div class="main-card" onclick="window.showLessonMenu()">
       <div class="main-icon" data-icon-id="landing"></div>
-      <div class="main-title">Past Simple vs Past Perfect</div>
-      <div class="main-sub"><span id="main-sub-total"></span> questions · 8 stations </div>
-      <button class="pill-btn">Start Drill</button>
+      <div class="main-title">Grammar Course</div>
+      <div class="main-sub">Choose a topic to start</div>
+      <button class="pill-btn">Browse Lessons</button>
     </div>
   </div>
 
+  <!-- 2. Экран выбора урока -->
+  <div id="lesson-menu-screen" class="hidden landing-screen">
+    <h1 class="hero-text">📚 English Grammar Course</h1>
+    <p class="subtitle">Choose a topic to start practising</p>
+    <div id="lesson-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 0 20px; max-width: 1000px; margin: 0 auto;"></div>
+  </div>
+
+  <!-- 3. Сетка станций -->
   <div id="grid-screen" class="hidden grid-container"></div>
+
+  <!-- 4. Область упражнений -->
   <div id="exercise-screen" class="hidden exercise-container"><div id="stations-container"></div></div>
+
+  <!-- 5. Плавающий трекер -->
   <div id="tracker-pill" class="tracker-pill hidden">
     <button class="back-btn" onclick="window.backToGrid()">← Blocks</button>
     <div style="width:1px; height:16px; background:var(--accent-light);"></div>
     <span id="tracker-q">Q 0/<span id="tracker-total"></span></span>
+    <span id="tracker-c">✅ 0</span>
   </div>
+
+  <!-- 6. Финальный экран -->
   <div id="final-screen" class="hidden final-screen">
     <div class="score-ring"><svg viewBox="0 0 160 160"><circle class="ring-bg" cx="80" cy="80" r="70"/><circle class="ring-fill" cx="80" cy="80" r="70"/></svg><div class="score-text" id="final-score-display">0%</div></div>
     <div class="final-name" id="final-greeting"></div>
@@ -242,152 +258,160 @@
     <p class="subtitle" id="final-msg"></p>
     <div class="breakdown" id="breakdown-container"></div>
     <div style="background:var(--surface); padding:12px; border-radius:12px; margin:20px auto; max-width:260px; font-size:0.8rem; color:var(--text-light); border:var(--border);">📊 Report: <span id="report-status">Ready</span></div>
-    <button class="pill-btn" onclick="location.reload()" style="max-width:160px; margin:0 auto; pointer-events:auto;">🔄 Start Over</button>
+    <button class="pill-btn" onclick="window.goHome()" style="max-width:160px; margin:0 auto; pointer-events:auto;"> Back to Menu</button>
   </div>
 </div>
 
 <script>
-const stations = [
-  { id:1, title:"Multiple Choice", subtitle:"6 questions · Recognition", type:"mc", desc:"Выберите один грамматически верный вариант.", q:[
-    {t:"We rushed to the cinema, but... By the time we arrived, the film ___ .", opts:["started","had started","was starting","has started"], c:1, ok:"`By the time` создаёт «дедлайн» в прошлом → действие уже завершилось.", err:"By the time требует акцента на завершённости до указанного момента."},
-    {t:"I tried calling her, and... When I finally reached her, she ___ just _____ work.", opts:["has/finished","had/finished","was/finished","did/finish"], c:1, ok:"`Just` + завершение до звонка → Past Perfect.", err:"Действие завершилось ДО другого прошлого действия."},
-    {t:"The letter was emotional... So as I ___ it, my hands shook.", opts:["opened","had opened","was opening","open"], c:0, ok:"`As` указывает на одновременность → достаточно Past Simple.", err:"As = «в то время как», не требует сдвига времён."},
-    {t:"She's very well-traveled... She ___ to Paris twice before 2020.", opts:["went","had been","has been","was going"], c:1, ok:"`Before` + дата в прошлом → опыт до момента → Past Perfect.", err:"Опыт, завершённый до конкретного момента в прошлом."},
-    {t:"She usually feels relaxed after meals, so... After she ___ dinner, she got asleep.", opts:["had eaten","ate","was eating","has eaten"], c:0, ok:"`After` + Past Perfect подчёркивает полную завершённость первого действия.", err:"Акцент на том, что первое действие полностью завершилось перед вторым."},
-    {t:"The classroom went quiet... When the teacher came in, everyone ___ talking.", opts:["stopped","had stopped","was stopping","stops"], c:0, ok:"Быстрая реакция/последовательность → Past Simple в обеих частях.", err:"Когда действия следуют сразу друг за другом, Past Simple звучит естественнее."}
+// 📚 БИБЛИОТЕКА УРОКОВ (добавляйте новые темы сюда)
+const COURSE = {
+  past_tenses: [
+    { id:1, title:"Multiple Choice", subtitle:"6 questions · Recognition", type:"mc", desc:"Выберите один грамматически верный вариант.", q:[
+      {t:"We rushed to the cinema, but... By the time we arrived, the film ___ .", opts:["started","had started","was starting","has started"], c:1, ok:"`By the time` создаёт «дедлайн» в прошлом → действие уже завершилось.", err:"By the time требует акцента на завершённости до указанного момента."},
+      {t:"I tried calling her, and... When I finally reached her, she ___ just _____ work.", opts:["has/finished","had/finished","was/finished","did/finish"], c:1, ok:"`Just` + завершение до звонка → Past Perfect.", err:"Действие завершилось ДО другого прошлого действия."},
+      {t:"The letter was emotional... So as I ___ it, my hands shook.", opts:["opened","had opened","was opening","open"], c:0, ok:"`As` указывает на одновременность → достаточно Past Simple.", err:"As = «в то время как», не требует сдвига времён."},
+      {t:"She's very well-traveled... She ___ to Paris twice before 2020.", opts:["went","had been","has been","was going"], c:1, ok:"`Before` + дата в прошлом → опыт до момента → Past Perfect.", err:"Опыт, завершённый до конкретного момента в прошлом."},
+      {t:"She usually feels relaxed after meals, so... After she ___ dinner, she got asleep.", opts:["had eaten","ate","was eating","has eaten"], c:0, ok:"`After` + Past Perfect подчёркивает полную завершённость первого действия.", err:"Акцент на том, что первое действие полностью завершилось перед вторым."},
+      {t:"The classroom went quiet... When the teacher came in, everyone ___ talking.", opts:["stopped","had stopped","was stopping","stops"], c:0, ok:"Быстрая реакция/последовательность → Past Simple в обеих частях.", err:"Когда действия следуют сразу друг за другом, Past Simple звучит естественнее."}
+    ]},
+    { id:2, title:"Error Correction", subtitle:"4 questions · Accuracy", type:"err", desc:"Выберите грамматически верное предложение.", q:[
+      {opts:["By the time we arrived at the theater, the play started.","By the time we arrived at the theater, the play had started.","By the time we arrived at the theater, the play was starting."], c:1, ok:"`By the time` требует Past Perfect для действия, завершённого к моменту.", err:"Действие уже завершилось к моменту прибытия."},
+      {opts:["When I called her office, she has just finished work.","When I called her office, she was just finished work.","When I called her office, she had just finished work."], c:2, ok:"`Just` + завершение до звонка → Past Perfect.", err:"`Has` нельзя использовать с прошлым маркером `when`."},
+      {opts:["As I had opened the emotional letter, my hands shook.","As I opened the emotional letter, my hands shook.","As I was opened the emotional letter, my hands shook."], c:1, ok:"`As` + Past Simple для одновременных действий.", err:"`As` не требует сдвига времён."},
+      {opts:["Before he apologized sincerely, he has denied everything.","Before he apologized sincerely, he had denied everything.","Before he apologized sincerely, he was denying everything."], c:1, ok:"Past Perfect подчёркивает, что отрицание произошло ДО извинения.", err:"`Has` не используется в прошлом контексте."}
+    ]},
+    { id:3, title:"Match the Halves", subtitle:"4 pairs · Logic", type:"match", desc:"Соедините смысловые части предложений. Обратите внимание на грамматику.", q:[
+      {pairs:[{l:"While I was cooking dinner...",r:"...the phone rang unexpectedly."},{l:"As soon as I saw her at the station...",r:"...I smiled and waved."},{l:"By the time he came to the meeting...",r:"...we had already finished the discussion."},{l:"Until she explained the rule clearly...",r:"...I hadn't understood the exercise."}]}
+    ]},
+    { id:4, title:"Gap Fill", subtitle:"5 gaps · Form", type:"gap", desc:"Впишите правильную форму глагола в пропуск.", q:[
+    {t:'1. When I came to her, she ___ <span class="hint">(be / ready)</span> for walking yet.', kw:["had","been","ready"], m:["had not been ready", "hadn't been ready"], ok:"Порядок: had not + V3 + ready.", err:"Порядок: had not + V3 + ready."},
+    {t:'2. They moved to different cities... They ___ <span class="hint">(not / see)</span> each other since they left school.', kw:["had","not","seen","hadn't"], m:["hadn't seen","had not seen"], ok:"Отрицание + since → Past Perfect.", err:"Not идёт после had."},
+    {t:'3. ___ <span class="hint">(you / ever / try)</span> sushi before your trip to Japan?', kw:["had","tried"], m:["Had / tried", "Had you ever tried","Had / tried" ], ok:"Вопрос + ever → Had + подлежащее (you) +  ever + V3.", err:"В вопросах `Had` выносится в начало → Had + подлежащее (you) +  ever + V3."},
+    {t:'4. I ___ <span class="hint">(know)</span> him for years before we became close friends.', kw:["had","known"], m:["had known"], ok:"Глагол состояния + for до прошлого момента → Past Perfect.", err:"State verbs + длительность до past moment."},
+    {t:'5. He\'s a prolific writer... By 2015, he ___ <span class="hint">(already / write)</span> three novels.', kw:["had","already","written"], m:["had already written"], ok:"By + год + already → Past Perfect.", err:"By + год + already → Past Perfect. Already ставится между had и V3."}
   ]},
-  { id:2, title:"Error Correction", subtitle:"4 questions · Accuracy", type:"err", desc:"Выберите грамматически верное предложение.", q:[
-    {opts:["By the time we arrived at the theater, the play started.","By the time we arrived at the theater, the play had started.","By the time we arrived at the theater, the play was starting."], c:1, ok:"`By the time` требует Past Perfect для действия, завершённого к моменту.", err:"Действие уже завершилось к моменту прибытия."},
-    {opts:["When I called her office, she has just finished work.","When I called her office, she was just finished work.","When I called her office, she had just finished work."], c:2, ok:"`Just` + завершение до звонка → Past Perfect.", err:"`Has` нельзя использовать с прошлым маркером `when`."},
-    {opts:["As I had opened the emotional letter, my hands shook.","As I opened the emotional letter, my hands shook.","As I was opened the emotional letter, my hands shook."], c:1, ok:"`As` + Past Simple для одновременных действий.", err:"`As` не требует сдвига времён."},
-    {opts:["Before he apologized sincerely, he has denied everything.","Before he apologized sincerely, he had denied everything.","Before he apologized sincerely, he was denying everything."], c:1, ok:"Past Perfect подчёркивает, что отрицание произошло ДО извинения.", err:"`Has` не используется в прошлом контексте."}
-  ]},
-  { id:3, title:"Match the Halves", subtitle:"4 pairs · Logic", type:"match", desc:"Соедините смысловые части предложений. Обратите внимание на грамматику.", q:[
-    {pairs:[{l:"While I was cooking dinner...",r:"...the phone rang unexpectedly."},{l:"As soon as I saw her at the station...",r:"...I smiled and waved."},{l:"By the time he came to the meeting...",r:"...we had already finished the discussion."},{l:"Until she explained the rule clearly...",r:"...I hadn't understood the exercise."}]}
-  ]},
-  { id:4, title:"Gap Fill", subtitle:"5 gaps · Form", type:"gap", desc:"Впишите правильную форму глагола в пропуск.", q:[
-  {t:'1. When I came to her, she ___ <span class="hint">(be / ready)</span> for walking yet.', kw:["had","been","ready"], m:["had not been ready", "hadn't been ready"], ok:"Порядок: had not + V3 + ready.", err:"Порядок: had not + V3 + ready."},
-  {t:'2. They moved to different cities... They ___ <span class="hint">(not / see)</span> each other since they left school.', kw:["had","not","seen","hadn't"], m:["hadn't seen","had not seen"], ok:"Отрицание + since → Past Perfect.", err:"Not идёт после had."},
-  {t:'3. ___ <span class="hint">(you / ever / try)</span> sushi before your trip to Japan?', kw:["had","tried"], m:["Had / tried", "Had you ever tried","Had / tried" ], ok:"Вопрос + ever → Had + подлежащее (you) +  ever + V3.", err:"В вопросах `Had` выносится в начало → Had + подлежащее (you) +  ever + V3."},
-  {t:'4. I ___ <span class="hint">(know)</span> him for years before we became close friends.', kw:["had","known"], m:["had known"], ok:"Глагол состояния + for до прошлого момента → Past Perfect.", err:"State verbs + длительность до past moment."},
-  {t:'5. He\'s a prolific writer... By 2015, he ___ <span class="hint">(already / write)</span> three novels.', kw:["had","already","written"], m:["had already written"], ok:"By + год + already → Past Perfect.", err:"By + год + already → Past Perfect. Already ставится между had и V3."}
-]},
-  { id:5, title:"Word Order", subtitle:"4 sentences · Syntax", type:"order", desc:"Соберите предложение, расставив слова в правильном порядке.", q:[
-    {w:["had","already","they","left","arrived","I","before"], valid:["They had already left before I arrived.","I had already left before they arrived."], ok:"Порядок: S + had + already + V3 + before + S + V2.", err:"Обратите внимание на позицию already."},
-    {w:["you","ever","had","been","before","there"], valid:["Had you ever been there before?"], ok:"Вопрос: Had + S + ever + V3 + there + before?", err:"В вопросах Had выносится в начало."},
-    {w:["not","had","she","finished","when","the","bell","rang"], valid:["She had not finished when the bell rang."], ok:"Отрицание + `when` + прерывающее действие.", err:"Not после had. `the` обязателен."},
-    {w:["why","asked","he","she","had","left"], valid:["He asked why she had left.", "She asked why he had left."], ok:"Косвенный вопрос: прямой порядок слов, сдвиг времён.", err:"В косвенных вопросах порядок S + V."}
-  ]},
-  { id:6, title:"Context & Meaning", subtitle:"4 questions · Nuance", type:"mc", desc:"Выберите вариант, который лучше всего подходит по контексту.", q:[
-    {t:"When I arrived at her house, she ___ .", opts:["left","had left","was leaving","leaves"], c:1, ok:"Had left = ушла ДО моего приезда.", err:"Left = ушла ПОСЛЕ сразу после моего приезда (неясная логика, почему ушла). Контекст требует Past Perfect."},
-    {t:"I woke up, ___ my teeth, and ___ for work.", opts:["brushed/left","had brushed/had left","was brushing/left","brush/leave"], c:0, ok:"Хронологическая цепочка → Past Simple в обеих частях.", err:"В рассказах порядок ясен из контекста, сдвиг не нужен."},
-    {t:"He was exhausted because he ___ all day.", opts:["worked","had worked","was working","works"], c:1, ok:"Причина состояния в прошлом → более раннее действие → Past Perfect.", err:"Он работал ДО того, как почувствовал усталость."},
-    {t:"Before I moved to Spain, I ___ any Spanish.", opts:["didn't know","hadn't known","wasn't known","haven't known"], c:1, ok:"Состояние до переезда → Past Perfect.", err:"Акцент на том, что знание отсутствовало ДО момента переезда."}
-  ]},
-  { id:7, title:"Cloze Text", subtitle:"3 texts · 30 gaps · Flow", type:"cloze", desc:"Прочитайте текст и заполните пропуски правильной формой глагола.", texts:[
-    { title:"A Busy Morning", parts:[ 
-      {type:"text", content:"Yesterday was a crazy day! When I "},{type:"gap", hint:"(wake up)", kw:["woke","up"], m:["woke up"], note:"Past Simple: однократное действие в конкретное время (at 7 AM)."},
-      {type:"text", content:" at 7 AM, I realized I "},{type:"gap", hint:"(already / miss)", kw:["had","already","missed"], m:["had already missed"], note:"Past Perfect: действие завершилось ДО осознания (realized)."},
-      {type:"text", content:" the bus. I "},{type:"gap", hint:"(quickly / get)", kw:["quickly","got"], m:["quickly got"], note:"Past Simple: следующее звено в цепочке событий."},
-      {type:"text", content:" dressed and "},{type:"gap", hint:"(run)", kw:["ran"], m:["ran"], note:"Past Simple: последовательное действие (got dressed and ran)."},
-      {type:"text", content:" to the station, but by the time I "},{type:"gap", hint:"(arrive)", kw:["arrived"], m:["arrived"], note:"Past Simple: момент, к которому произошло другое действие."},
-      {type:"text", content:", the train "},{type:"gap", hint:"(already / leave)", kw:["had","already","left"], m:["had already left"], note:"Past Perfect: поезд ушёл ДО момента прибытия на станцию."},
-      {type:"text", content:". I "},{type:"gap", hint:"(call)", kw:["called"], m:["called"], note:"Past Simple: следующее действие в хронологии."},
-      {type:"text", content:" my friend Anna, and she "},{type:"gap", hint:"(tell)", kw:["told"], m:["told"], note:"Past Simple: реакция/ответ после звонка."},
-      {type:"text", content:" me that she "},{type:"gap", hint:"(wait)", kw:["had","waited"], m:["had waited"], note:"Past Perfect: ожидание длилось ДО момента разговора."},
-      {type:"text", content:" for me for 20 minutes! We finally "},{type:"gap", hint:"(meet)", kw:["met"], m:["met"], note:"Past Simple: завершающее событие в цепочке."},
-      {type:"text", content:" at the café, but I "},{type:"gap", hint:"(never / feel)", kw:["had","never","felt"], m:["had never felt"], note:"Past Perfect: опыт/состояние ДО момента встречи в кафе."}
-    ], ok:"Great job! You mastered the sequence of past events.", err:"Review the order: Past Perfect for earlier actions, Past Simple for the main timeline." },
-    { title:"The Surprise Party", parts:[ 
-      {type:"text", content:"Last Saturday, we "},{type:"gap", hint:"(plan)", kw:["planned"], m:["planned"], note:"Past Simple: факт планирования в прошлом (Last Saturday)."},
-      {type:"text", content:" a surprise party for Maria. When she "},{type:"gap", hint:"(arrive)", kw:["arrived"], m:["arrived"], note:"Past Simple: момент прибытия, к которому все уже спрятались."},
-      {type:"text", content:" at the apartment, everyone "},{type:"gap", hint:"(hide)", kw:["had","hidden"], m:["had hidden"], note:"Past Perfect: спрятались ДО её прихода."},
-      {type:"text", content:" behind the furniture. She "},{type:"gap", hint:"(not / expect)", kw:["hadn't","expected","had","not","expected"], m:["hadn't expected","had not expected"], note:"Past Perfect: состояние незнания ДО момента шока."},
-      {type:"text", content:" anything, so she "},{type:"gap", hint:"(be)", kw:["was"], m:["was"], note:"Past Simple: описание состояния в конкретный момент (so she was shocked)."},
-      {type:"text", content:" completely shocked! Before we "},{type:"gap", hint:"(start)", kw:["started"], m:["started"], note:"Past Simple: следующее действие в последовательности."},
-      {type:"text", content:" the celebration, I "},{type:"gap", hint:"(realize)", kw:["realized"], m:["realized"], note:"Past Simple: момент осознания перед праздником."},
-      {type:"text", content:" that I "},{type:"gap", hint:"(forget)", kw:["had","forgotten"], m:["had forgotten"], note:"Past Perfect: забыл ДО момента осознания (realized)."},
-      {type:"text", content:" to buy candles. Luckily, Anna "},{type:"gap", hint:"(already / bring)", kw:["had","already","brought"], m:["had already brought"], note:"Past Perfect: принесла ДО момента, когда заметили отсутствие."}
-    ], ok:"Perfect! You caught all the hidden actions.", err:"Remember: actions before another past moment need Past Perfect." },
-    { title:"The Lost Keys", parts:[ 
-      {type:"text", content:"Yesterday evening, I couldn't find my keys anywhere. I "},{type:"gap", hint:"(search)", kw:["searched"], m:["searched"], note:"Past Simple: основное действие в прошлом."},
-      {type:"text", content:" the whole apartment, but I "},{type:"gap", hint:"(not / find)", kw:["didn't","find","had","not","found"], m:["didn't find","had not found"], note:"Past Simple: результат поиска (не нашёл)."},
-      {type:"text", content:" them. Then I remembered: before I "},{type:"gap", hint:"(leave)", kw:["left"], m:["left"], note:"Past Simple: момент ухода с работы (before I left)."},
-      {type:"text", content:" work, I "},{type:"gap", hint:"(put)", kw:["had","put"], m:["had put"], note:"Past Perfect: положил ключи ДО ухода с работы."},
-      {type:"text", content:" them in my bag. When I "},{type:"gap", hint:"(check)", kw:["checked"], m:["checked"], note:"Past Simple: следующее действие в хронологии."},
-      {type:"text", content:" my bag, they "},{type:"gap", hint:"(not / be)", kw:["weren't","were","not"], m:["weren't","were not"], note:"Past Simple: описание состояния в момент проверки."},
-      {type:"text", content:" there! Finally, I "},{type:"gap", hint:"(call)", kw:["called"], m:["called"], note:"Past Simple: следующее действие после проверки."},
-      {type:"text", content:" my colleague, and she "},{type:"gap", hint:"(tell)", kw:["told"], m:["told"], note:"Past Simple: ответ коллеги после звонка."},
-      {type:"text", content:" me that she "},{type:"gap", hint:"(see)", kw:["had","seen"], m:["had seen"], note:"Past Perfect: коллега видела ключи ПОСЛЕ вашего ухода."},
-      {type:"text", content:" the keys on my desk after I "},{type:"gap", hint:"(go)", kw:["had","gone","went"], m:["had gone","went"], note:"Past Perfect: уход произошёл ДО того, как коллега увидела ключи."}
-    ], ok:"Excellent! You tracked the timeline perfectly.", err:"Tip: 'before/after' clauses help identify which action came first." }
-  ]},
-{ id:8, title:"Translation RU→EN", subtitle:"8 sentences · Production", type:"trans", desc:"Переведите предложения, используя правильные времена и структуру.", q:[
-  {
-    t:"Я не знал правду, пока он не сказал.", 
-    kw:["had","not","known","truth","until","he","said"], 
-    m:["I hadn't known the truth until he said.", "I had not known the truth until he said."], 
-    ok:"Not ... until + Past Perfect для состояния, которое длилось ДО момента.", 
-    err:"Используйте Past Perfect для части до 'until'.",
-    note:"Past Perfect (hadn't known) показывает, что незнание прекратилось ровно в момент его ухода."
-  },
-  {
-    t:"Как только она открыла окно, птица улетела.", 
-    kw:["as","soon","as","opened","window","bird","flew","away"], 
-    m:["As soon as she opened the window, the bird flew away.", "The bird flew away as soon as she opened the window."], 
-    ok:"As soon as + последовательность событий (Past Simple).", 
-    err:"Оба действия быстрые и идут друг за другом.",
-    note:"Здесь Past Simple в обеих частях, так как действия происходят мгновенно одно за другим."
-  },
-  {
-    t:"Пока я спускался по лестнице, я встретил соседа.", 
-    kw:["as","was","coming","down","stairs","met","neighbor"], 
-    m:["As I was coming down the stairs, I met my neighbor."], 
-    ok:"As + Past Continuous (процесс) + Past Simple (событие).", 
-    err:"Длительное действие прерывается встречей.",
-    note:"Past Continuous (was coming) — это фон, на котором произошло краткое действие (met)."
-  },
-  {
-    t:"Когда я вернулся в отель, я понял, что потерял ключи.", 
-    kw:["when","returned","hotel","realized","had","lost","keys"], 
-    m:["When I returned to the hotel, I realized I had lost my keys.", "I realized I had lost my keys when I returned to the hotel."], 
-    ok:"When + Past Perfect, так как потеря произошла ДО возвращения.", 
-    err:"Потеря случилась раньше, чем вы вернулись.",
-    note:"Past Perfect (had lost) объясняет ПРИЧИНУ состояния realized в прошлом."
-  },
-  {
-    t:"Когда она вошла в комнату, все замолчали.", 
-    kw:["when","entered","room","everyone","went","silent"], 
-    m:["When she entered the room, everyone went silent.", "Everyone went silent when she entered the room."], 
-    ok:"When + Past Simple для быстрой последовательности/реакции.", 
-    err:"Это реакция на вход, а не результат более раннего действия.",
-    note:"Past Simple в обеих частях: сначала вошла → после чего сразу все замолчали."
-  },
-  {
-    t:"К тому моменту, как полиция приехала, воры уже сбежали.", 
-    kw:["by","time","police","arrived","thieves","had","escaped"], 
-    m:["By the time the police arrived, the thieves had already escaped.", "The thieves had already escaped by the time the police arrived."], 
-    ok:"`By the time` + Past Perfect (завершение до дедлайна).", 
-    err:"Воры скрылись ДО приезда полиции.",
-    note:"Past Perfect подчеркивает, что к моменту приезда полиции воров уже не было на месте."
-  },
-  {
-    t:"Он был очень голоден, потому что не ел весь день.", 
-    kw:["was","hungry","because","had","not","eaten","all","day"], 
-    m:["He was very hungry because he hadn't eaten all day.", "He was very hungry because he had not eaten all day."], 
-    ok:"Причина состояния в прошлом → Past Perfect.", 
-    err:"Голод был результатом того, что он не ел РАНЬШЕ.",
-    note:"Past Perfect (hadn't eaten) объясняет причину прошлого состояния (was hungry)."
-  },
-  {
-    t:"Она не могла уснуть, потому что посмотрела страшный фильм.", 
-    kw:["could","not","sleep","because","had","watched","scary","movie"], 
-    m:["She couldn't sleep because she had watched a scary movie.", "She couldn't sleep because she had seen a scary movie."], 
-    ok:"Результат/состояние в прошлом из-за более раннего действия.", 
-    err:"Просмотр фильма произошел ДО того, как она не могла уснуть.",
-    note:"Past Perfect показывает, что просмотр фильма предшествовал бессоннице."
-  }
-]}];
+    { id:5, title:"Word Order", subtitle:"4 sentences · Syntax", type:"order", desc:"Соберите предложение, расставив слова в правильном порядке.", q:[
+      {w:["had","already","they","left","arrived","I","before"], valid:["They had already left before I arrived.","I had already left before they arrived."], ok:"Порядок: S + had + already + V3 + before + S + V2.", err:"Обратите внимание на позицию already."},
+      {w:["you","ever","had","been","before","there"], valid:["Had you ever been there before?"], ok:"Вопрос: Had + S + ever + V3 + there + before?", err:"В вопросах Had выносится в начало."},
+      {w:["not","had","she","finished","when","the","bell","rang"], valid:["She had not finished when the bell rang."], ok:"Отрицание + `when` + прерывающее действие.", err:"Not после had. `the` обязателен."},
+      {w:["why","asked","he","she","had","left"], valid:["He asked why she had left.", "She asked why he had left."], ok:"Косвенный вопрос: прямой порядок слов, сдвиг времён.", err:"В косвенных вопросах порядок S + V."}
+    ]},
+    { id:6, title:"Context & Meaning", subtitle:"4 questions · Nuance", type:"mc", desc:"Выберите вариант, который лучше всего подходит по контексту.", q:[
+      {t:"When I arrived at her house, she ___ .", opts:["left","had left","was leaving","leaves"], c:1, ok:"Had left = ушла ДО моего приезда.", err:"Left = ушла ПОСЛЕ сразу после моего приезда (неясная логика, почему ушла). Контекст требует Past Perfect."},
+      {t:"I woke up, ___ my teeth, and ___ for work.", opts:["brushed/left","had brushed/had left","was brushing/left","brush/leave"], c:0, ok:"Хронологическая цепочка → Past Simple в обеих частях.", err:"В рассказах порядок ясен из контекста, сдвиг не нужен."},
+      {t:"He was exhausted because he ___ all day.", opts:["worked","had worked","was working","works"], c:1, ok:"Причина состояния в прошлом → более раннее действие → Past Perfect.", err:"Он работал ДО того, как почувствовал усталость."},
+      {t:"Before I moved to Spain, I ___ any Spanish.", opts:["didn't know","hadn't known","wasn't known","haven't known"], c:1, ok:"Состояние до переезда → Past Perfect.", err:"Акцент на том, что знание отсутствовало ДО момента переезда."}
+    ]},
+    { id:7, title:"Cloze Text", subtitle:"3 texts · 30 gaps · Flow", type:"cloze", desc:"Прочитайте текст и заполните пропуски правильной формой глагола.", texts:[
+      { title:"A Busy Morning", parts:[ 
+        {type:"text", content:"Yesterday was a crazy day! When I "},{type:"gap", hint:"(wake up)", kw:["woke","up"], m:["woke up"], note:"Past Simple: однократное действие в конкретное время (at 7 AM)."},
+        {type:"text", content:" at 7 AM, I realized I "},{type:"gap", hint:"(already / miss)", kw:["had","already","missed"], m:["had already missed"], note:"Past Perfect: действие завершилось ДО осознания (realized)."},
+        {type:"text", content:" the bus. I "},{type:"gap", hint:"(quickly / get)", kw:["quickly","got"], m:["quickly got"], note:"Past Simple: следующее звено в цепочке событий."},
+        {type:"text", content:" dressed and "},{type:"gap", hint:"(run)", kw:["ran"], m:["ran"], note:"Past Simple: последовательное действие (got dressed and ran)."},
+        {type:"text", content:" to the station, but by the time I "},{type:"gap", hint:"(arrive)", kw:["arrived"], m:["arrived"], note:"Past Simple: момент, к которому произошло другое действие."},
+        {type:"text", content:", the train "},{type:"gap", hint:"(already / leave)", kw:["had","already","left"], m:["had already left"], note:"Past Perfect: поезд ушёл ДО момента прибытия на станцию."},
+        {type:"text", content:". I "},{type:"gap", hint:"(call)", kw:["called"], m:["called"], note:"Past Simple: следующее действие в хронологии."},
+        {type:"text", content:" my friend Anna, and she "},{type:"gap", hint:"(tell)", kw:["told"], m:["told"], note:"Past Simple: реакция/ответ после звонка."},
+        {type:"text", content:" me that she "},{type:"gap", hint:"(wait)", kw:["had","waited"], m:["had waited"], note:"Past Perfect: ожидание длилось ДО момента разговора."},
+        {type:"text", content:" for me for 20 minutes! We finally "},{type:"gap", hint:"(meet)", kw:["met"], m:["met"], note:"Past Simple: завершающее событие в цепочке."},
+        {type:"text", content:" at the café, but I "},{type:"gap", hint:"(never / feel)", kw:["had","never","felt"], m:["had never felt"], note:"Past Perfect: опыт/состояние ДО момента встречи в кафе."}
+      ], ok:"Great job! You mastered the sequence of past events.", err:"Review the order: Past Perfect for earlier actions, Past Simple for the main timeline." },
+      { title:"The Surprise Party", parts:[ 
+        {type:"text", content:"Last Saturday, we "},{type:"gap", hint:"(plan)", kw:["planned"], m:["planned"], note:"Past Simple: факт планирования в прошлом (Last Saturday)."},
+        {type:"text", content:" a surprise party for Maria. When she "},{type:"gap", hint:"(arrive)", kw:["arrived"], m:["arrived"], note:"Past Simple: момент прибытия, к которому все уже спрятались."},
+        {type:"text", content:" at the apartment, everyone "},{type:"gap", hint:"(hide)", kw:["had","hidden"], m:["had hidden"], note:"Past Perfect: спрятались ДО её прихода."},
+        {type:"text", content:" behind the furniture. She "},{type:"gap", hint:"(not / expect)", kw:["hadn't","expected","had","not","expected"], m:["hadn't expected","had not expected"], note:"Past Perfect: состояние незнания ДО момента шока."},
+        {type:"text", content:" anything, so she "},{type:"gap", hint:"(be)", kw:["was"], m:["was"], note:"Past Simple: описание состояния в конкретный момент (so she was shocked)."},
+        {type:"text", content:" completely shocked! Before we "},{type:"gap", hint:"(start)", kw:["started"], m:["started"], note:"Past Simple: следующее действие в последовательности."},
+        {type:"text", content:" the celebration, I "},{type:"gap", hint:"(realize)", kw:["realized"], m:["realized"], note:"Past Simple: момент осознания перед праздником."},
+        {type:"text", content:" that I "},{type:"gap", hint:"(forget)", kw:["had","forgotten"], m:["had forgotten"], note:"Past Perfect: забыл ДО момента осознания (realized)."},
+        {type:"text", content:" to buy candles. Luckily, Anna "},{type:"gap", hint:"(already / bring)", kw:["had","already","brought"], m:["had already brought"], note:"Past Perfect: принесла ДО момента, когда заметили отсутствие."}
+      ], ok:"Perfect! You caught all the hidden actions.", err:"Remember: actions before another past moment need Past Perfect." },
+      { title:"The Lost Keys", parts:[ 
+        {type:"text", content:"Yesterday evening, I couldn't find my keys anywhere. I "},{type:"gap", hint:"(search)", kw:["searched"], m:["searched"], note:"Past Simple: основное действие в прошлом."},
+        {type:"text", content:" the whole apartment, but I "},{type:"gap", hint:"(not / find)", kw:["didn't","find","had","not","found"], m:["didn't find","had not found"], note:"Past Simple: результат поиска (не нашёл)."},
+        {type:"text", content:" them. Then I remembered: before I "},{type:"gap", hint:"(leave)", kw:["left"], m:["left"], note:"Past Simple: момент ухода с работы (before I left)."},
+        {type:"text", content:" work, I "},{type:"gap", hint:"(put)", kw:["had","put"], m:["had put"], note:"Past Perfect: положил ключи ДО ухода с работы."},
+        {type:"text", content:" them in my bag. When I "},{type:"gap", hint:"(check)", kw:["checked"], m:["checked"], note:"Past Simple: следующее действие в хронологии."},
+        {type:"text", content:" my bag, they "},{type:"gap", hint:"(not / be)", kw:["weren't","were","not"], m:["weren't","were not"], note:"Past Simple: описание состояния в момент проверки."},
+        {type:"text", content:" there! Finally, I "},{type:"gap", hint:"(call)", kw:["called"], m:["called"], note:"Past Simple: следующее действие после проверки."},
+        {type:"text", content:" my colleague, and she "},{type:"gap", hint:"(tell)", kw:["told"], m:["told"], note:"Past Simple: ответ коллеги после звонка."},
+        {type:"text", content:" me that she "},{type:"gap", hint:"(see)", kw:["had","seen"], m:["had seen"], note:"Past Perfect: коллега видела ключи ПОСЛЕ вашего ухода."},
+        {type:"text", content:" the keys on my desk after I "},{type:"gap", hint:"(go)", kw:["had","gone","went"], m:["had gone","went"], note:"Past Perfect: уход произошёл ДО того, как коллега увидела ключи."}
+      ], ok:"Excellent! You tracked the timeline perfectly.", err:"Tip: 'before/after' clauses help identify which action came first." }
+    ]},
+    { id:8, title:"Translation RU→EN", subtitle:"8 sentences · Production", type:"trans", desc:"Переведите предложения, используя правильные времена и структуру.", q:[
+      {
+        t:"Я не знал правду, пока он не сказал.", 
+        kw:["had","not","known","truth","until","he","said"], 
+        m:["I hadn't known the truth until he said.", "I had not known the truth until he said."], 
+        ok:"Not ... until + Past Perfect для состояния, которое длилось ДО момента.", 
+        err:"Используйте Past Perfect для части до 'until'.",
+        note:"Past Perfect (hadn't known) показывает, что незнание прекратилось ровно в момент его ухода."
+      },
+      {
+        t:"Как только она открыла окно, птица улетела.", 
+        kw:["as","soon","as","opened","window","bird","flew","away"], 
+        m:["As soon as she opened the window, the bird flew away.", "The bird flew away as soon as she opened the window."], 
+        ok:"As soon as + последовательность событий (Past Simple).", 
+        err:"Оба действия быстрые и идут друг за другом.",
+        note:"Здесь Past Simple в обеих частях, так как действия происходят мгновенно одно за другим."
+      },
+      {
+        t:"Пока я спускался по лестнице, я встретил соседа.", 
+        kw:["as","was","coming","down","stairs","met","neighbor"], 
+        m:["As I was coming down the stairs, I met my neighbor."], 
+        ok:"As + Past Continuous (процесс) + Past Simple (событие).", 
+        err:"Длительное действие прерывается встречей.",
+        note:"Past Continuous (was coming) — это фон, на котором произошло краткое действие (met)."
+      },
+      {
+        t:"Когда я вернулся в отель, я понял, что потерял ключи.", 
+        kw:["when","returned","hotel","realized","had","lost","keys"], 
+        m:["When I returned to the hotel, I realized I had lost my keys.", "I realized I had lost my keys when I returned to the hotel."], 
+        ok:"When + Past Perfect, так как потеря произошла ДО возвращения.", 
+        err:"Потеря случилась раньше, чем вы вернулись.",
+        note:"Past Perfect (had lost) объясняет ПРИЧИНУ состояния realized в прошлом."
+      },
+      {
+        t:"Когда она вошла в комнату, все замолчали.", 
+        kw:["when","entered","room","everyone","went","silent"], 
+        m:["When she entered the room, everyone went silent.", "Everyone went silent when she entered the room."], 
+        ok:"When + Past Simple для быстрой последовательности/реакции.", 
+        err:"Это реакция на вход, а не результат более раннего действия.",
+        note:"Past Simple в обеих частях: сначала вошла → после чего сразу все замолчали."
+      },
+      {
+        t:"К тому моменту, как полиция приехала, воры уже сбежали.", 
+        kw:["by","time","police","arrived","thieves","had","escaped"], 
+        m:["By the time the police arrived, the thieves had already escaped.", "The thieves had already escaped by the time the police arrived."], 
+        ok:"`By the time` + Past Perfect (завершение до дедлайна).", 
+        err:"Воры скрылись ДО приезда полиции.",
+        note:"Past Perfect подчеркивает, что к моменту приезда полиции воров уже не было на месте."
+      },
+      {
+        t:"Он был очень голоден, потому что не ел весь день.", 
+        kw:["was","hungry","because","had","not","eaten","all","day"], 
+        m:["He was very hungry because he hadn't eaten all day.", "He was very hungry because he had not eaten all day."], 
+        ok:"Причина состояния в прошлом → Past Perfect.", 
+        err:"Голод был результатом того, что он не ел РАНЬШЕ.",
+        note:"Past Perfect (hadn't eaten) объясняет причину прошлого состояния (was hungry)."
+      },
+      {
+        t:"Она не могла уснуть, потому что посмотрела страшный фильм.", 
+        kw:["could","not","sleep","because","had","watched","scary","movie"], 
+        m:["She couldn't sleep because she had watched a scary movie.", "She couldn't sleep because she had seen a scary movie."], 
+        ok:"Результат/состояние в прошлом из-за более раннего действия.", 
+        err:"Просмотр фильма произошел ДО того, как она не могла уснуть.",
+        note:"Past Perfect показывает, что просмотр фильма предшествовал бессоннице."
+      }
+    ]}
+  ]
+};
+
+// 🔹 Активный урок и текущие данные
+let currentLesson = 'past_tenses';
+let stations = COURSE[currentLesson]; // Программа читает отсюда
 
 // Fixed emoji arrays to prevent blank icons
 const themeConfig = {
@@ -451,9 +475,14 @@ window.applyTheme = function(name) {
 }
 
 window.initThemes = function() { window.applyTheme('slate'); }
+  window.showLessonMenu = function() {
+  document.getElementById('landing-screen').classList.add('hidden');
+  document.getElementById('lesson-menu-screen').classList.remove('hidden');
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   window.initThemes();
+  window.renderLessonMenu();
   window.loadProgress();
   window.renderGrid();
   window.updateTracker(); // ← ДОБАВЬТЕ ЭТУ СТРОКУ
