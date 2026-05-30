@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Past Simple vs Past Perfect Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Playfair Display', serif;
+    --bg: #F4F6F8; --surface: #FFFFFF; --text: #1A1A2E; --text-light: #6B7280;
+    --accent: #4A6FA5; --accent-light: #D6E4F0;
+    --radius: 12px; --shadow: 0 2px 8px rgba(0,0,0,0.06); --border: 1px solid rgba(0,0,0,0.06);
+    --glass: rgba(255,255,255,0.8); --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --header-height: 76px;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); min-height: 100dvh; display: flex; flex-direction: column; transition: background 0.4s ease; padding-top: var(--header-height); font-family: var(--font-sans); }
+  
+  .hidden { display: none !important; }
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Header */
+  .glass-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100; width: 100%; height: auto; min-height: 60px;
+    background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: var(--border); padding: 12px 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; transition: background 0.4s;
+  }
+  .theme-pills { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; width: 100%; justify-content: center; flex-wrap: nowrap; }
+  .theme-pill { padding: 6px 10px; border-radius: 50px; background: transparent; border: 1px solid var(--accent-light); font-size: 0.75rem; font-weight: 500; cursor: pointer; color: var(--text-light); transition: var(--transition); white-space: nowrap; }
+  .theme-pill:hover { background: var(--accent-light); color: var(--text); }
+  .theme-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .theme-pills::-webkit-scrollbar { display: none; }
+  .header-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 900px; gap: 16px; }
+  .name-wrap { flex: 1; max-width: 240px; position: relative; }
+  .name-input { width: 100%; padding: 6px 0; background: transparent; border: none; border-bottom: 2px solid var(--accent-light); font-size: 0.9rem; color: var(--text); text-align: center; transition: var(--transition); }
+  .name-input:focus { outline: none; border-bottom-color: var(--accent); }
+  .home-btn { background: transparent; border: 1px solid var(--accent-light); color: var(--accent); padding: 6px 14px; border-radius: 50px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: var(--transition); white-space: nowrap; }
+  .home-btn:hover { background: var(--accent-light); }
+
+  @media (min-width: 769px) {
+    .glass-header { flex-direction: row; flex-wrap: nowrap; height: var(--header-height); }
+    .theme-pills { width: auto; justify-content: flex-start; flex: 1; overflow: visible; }
+    .header-controls { justify-content: center; width: auto; }
+  }
+
+  /* Landing */
+  .landing-screen { padding: 40px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; min-height: calc(100dvh - var(--header-height)); animation: fadeIn 0.5s; }
+  .hero-text { 
+    font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+    background: linear-gradient(90deg, var(--accent), var(--text), var(--accent-light), var(--accent)); background-size: 300% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: heroGrad 6s linear infinite;
+  }
+  @keyframes heroGrad { 0% { background-position: 0% center; } 100% { background-position: 300% center; } }
+  .subtitle { font-size: 1rem; color: var(--text-light); margin-bottom: 40px; }
+  .main-card {
+    background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 24px; padding: 40px 24px; width: 100%; max-width: 360px;
+    box-shadow: var(--shadow); transition: var(--transition); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .main-card:hover { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  .main-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+  .main-title { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; line-height: 1.3; }
+  .main-sub { font-size: 0.85rem; color: var(--text-light); }
+  .pill-btn { width: 100%; padding: 12px; margin-top: 12px; border: none; border-radius: 50px; background: var(--accent); color: #fff; font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); transition: var(--transition); pointer-events: none; }
+
+  /* Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 20px; animation: fadeIn 0.5s ease; max-width: 1200px; margin: 0 auto; position: relative; }
+  .grid-card {
+    background: var(--surface); border-radius: var(--radius); padding: 20px; border: var(--border); box-shadow: var(--shadow);
+    position: relative; overflow: hidden; transition: var(--transition); cursor: pointer; display: flex; flex-direction: column; gap: 10px;
+  }
+  .grid-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light)); opacity: var(--tint, 1);
+  }
+  .grid-card:hover { transform: translateY(-6px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  .grid-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 4px; }
+  .grid-title { font-weight: 600; font-size: 1.05rem; padding-left: 24px; }
+  .grid-meta { font-size: 0.8rem; color: var(--text-light); padding-left: 24px; }
+  .grid-btn { width: 100%; padding: 8px; margin-top: auto; border: 1px solid var(--accent-light); border-radius: 50px; background: transparent; color: var(--accent); font-weight: 600; font-size: 0.85rem; transition: var(--transition); pointer-events: none; }
+  .grid-num { position: absolute; top: 10px; left: 10px; font-size: 0.75rem; font-weight: 700; color: var(--text-light); opacity: 0.4; letter-spacing: 1px; }
+
+  /* Exercise / Accordion */
+  .exercise-container { padding: 20px; max-width: 900px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+  .station { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; border-left: 4px solid var(--accent); position: relative; transition: border-left-color 0.3s; }
+  .station-header { padding: 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: var(--surface); transition: background 0.2s; }
+  .station-header:hover { background: #FAFAFA; }
+  .station-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; transition: background 0.3s; }
+  .station-info { flex: 1; }
+  .station-title { font-family: var(--font-serif); font-weight: 600; font-size: 1.05rem; }
+  .station-sub { font-size: 0.75rem; color: var(--text-light); }
+  .station-badge { font-size: 0.7rem; background: var(--accent-light); color: var(--accent); padding: 3px 8px; border-radius: 10px; }
+  .station-num { position: absolute; top: 8px; left: 12px; font-size: 0.7rem; font-weight: 700; color: var(--text-light); opacity: 0.4; letter-spacing: 1px; }
+  .station-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; opacity: 0; }
+  .station.open .station-content { max-height: 4000px; opacity: 1; overflow: visible; }
+  .station-footer { padding: 12px 16px; background: #F8F9FA; border-top: var(--border); display: none; }
+  .station.open .station-footer { display: flex; justify-content: space-between; align-items: center; }
+
+  /* Questions UI */
+  .q-block { padding: 20px; background: #FAFAFA; border-radius: 12px; margin: 12px 16px; transition: var(--transition); border: 1px solid transparent; }
+  .q-block.err-q { background: linear-gradient(135deg, #FFFDF5 0%, #FAFAF5 100%); border-left: 3px solid #FFE082; }
+  .q-block.pop-success { animation: popSuccess 0.4s ease; border-color: #38A169; }
+  .q-block.shake { animation: shake 0.4s ease; border-color: #E53E3E; }
+  @keyframes popSuccess { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.01); } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+  .q-text { font-size: 1rem; margin-bottom: 12px; font-weight: 500; line-height: 1.4; }
+  
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt { padding: 12px 16px; background: var(--surface); border: 1px solid rgba(0,0,0,0.1); border-radius: 50px; cursor: pointer; font-size: 0.9rem; transition: var(--transition); display: flex; align-items: center; position: relative; overflow: hidden; }
+  .opt::before { content: ''; width: 4px; height: 100%; background: transparent; position: absolute; left: 0; transition: background 0.2s; }
+  .opt:hover:not(:disabled) { border-color: var(--accent-light); transform: scale(1.01); }
+  .opt:hover::before { background: var(--accent); }
+  .opt.correct { background: #E6FFED; border-color: #38A169; color: #2F855A; } .opt.correct::before { background: #38A169; }
+  .opt.wrong { background: #FFE6E6; border-color: #E53E3E; color: #9B2C2C; } .opt.wrong::before { background: #E53E3E; }
+
+  .match-area { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; padding: 16px 0; }
+  .match-col { flex: 1; min-width: 45%; display: flex; flex-direction: column; gap: 8px; }
+  .match-item { padding: 12px; background: var(--surface); border-radius: 50px; cursor: pointer; text-align: center; min-height: 48px; border: 1px solid rgba(0,0,0,0.1); transition: var(--transition); }
+  .match-item.selected { border-color: var(--accent); background: var(--accent-light); }
+  .match-item.matched { background: #38A169; color: white; border-color: #38A169; opacity: 0.8; pointer-events: none; }
+  
+  /* Mobile fix for matching */
+  @media (max-width: 480px) {
+    .match-area { flex-direction: column; }
+    .match-col { min-width: 100%; }
+  }
+
+  .input-field { width: 100%; padding: 12px; border: 1px solid rgba(0,0,0,0.15); border-radius: 12px; font-size: 0.9rem; margin-bottom: 8px; background: var(--surface); }
+  .input-field:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .input-field.correct { border-color: #38A169; background: #E6FFED; }
+  .input-field.wrong { border-color: #E53E3E; background: #FFE6E6; }
+  
+  .word-pool, .answer-line { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; background: #F8F9FA; border-radius: 12px; border: 1px dashed rgba(0,0,0,0.15); margin-bottom: 8px; }
+  .answer-line { background: var(--surface); border: 2px solid var(--accent-light); min-height: 50px; }
+  .word-tile, .cloze-input { padding: 8px 12px; background: var(--surface); border: 1px solid rgba(0,0,0,0.15); border-radius: 8px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .cloze-input { border: none; border-bottom: 2px solid var(--accent); background: transparent; width: auto; min-width: 70px; max-width: 140px; padding: 2px 6px; font-family: inherit; font-size: 0.95em; color: var(--text); text-align: center; }
+  .cloze-input::placeholder { color: var(--text-light); font-style: italic; opacity: 0.7; }
+  .cloze-input:focus { outline: none; border-bottom-color: var(--accent); background: rgba(0,0,0,0.02); }
+  .cloze-input.correct { border-bottom-color: #38A169; background: rgba(56,161,105,0.05); }
+  .cloze-input.wrong { border-bottom-color: #E53E3E; background: rgba(229,62,62,0.05); }
+
+  .feedback { margin-top: 10px; padding: 10px; border-radius: 10px; font-size: 0.85rem; display: none; animation: fadeIn 0.2s; background: #F8F9FA; display: flex; flex-direction: column; gap: 8px; }
+  .feedback.show { display: flex; }
+  .feedback.success { border-left: 3px solid #38A169; color: #2F855A; }
+  .feedback.error { border-left: 3px solid #E53E3E; color: #9B2C2C; }
+  .feedback ul { margin: 4px 0 0 16px; padding: 0; list-style: none; }
+  .feedback li { margin-bottom: 6px; line-height: 1.4; }
+  .feedback .rule { display: block; font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+  .btn-show { align-self: flex-start; background: transparent; border: 1px dashed var(--text-light); color: var(--text-light); padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; cursor: pointer; margin-top: 4px; transition: var(--transition); }
+  .btn-show:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  .btn-retry-q { align-self: flex-start; background: var(--accent-light); color: var(--accent); border: none; padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; cursor: pointer; margin-top: 4px; transition: var(--transition); display: flex; align-items: center; gap: 4px; }
+  .btn-retry-q:hover { background: var(--accent); color: #fff; }
+
+  .btn-check { background: var(--accent); color: #fff; border: none; padding: 10px; border-radius: 50px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; font-size: 0.9rem; }
+  .btn-check:hover { filter: brightness(1.1); } .btn-check:disabled { background: #CBD5E0; cursor: not-allowed; filter: none; }
+  .btn-retry { background: transparent; color: var(--text-light); border: 1px solid rgba(0,0,0,0.1); padding: 8px 16px; border-radius: 50px; cursor: pointer; font-size: 0.85rem; transition: var(--transition); }
+  .btn-retry:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Floating Tracker */
+  .tracker-pill { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 90; background: var(--glass); backdrop-filter: blur(12px); border: var(--border); border-radius: 50px; padding: 10px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); font-size: 0.8rem; font-weight: 500; white-space: nowrap; }
+  .tracker-pill span { display: flex; align-items: center; gap: 4px; color: var(--text-light); }
+  .back-btn { background: transparent; border: none; color: var(--accent); font-weight: 600; cursor: pointer; padding: 6px 10px; border-radius: 50px; transition: var(--transition); display: flex; align-items: center; gap: 4px; }
+  .back-btn:hover { background: var(--accent-light); }
+
+  /* Final Screen */
+  .final-screen { text-align: center; padding: 30px 20px; animation: fadeIn 0.5s ease; max-width: 600px; margin: 0 auto; }
+  .score-ring { position: relative; width: 160px; height: 160px; margin: 0 auto 16px; }
+  .score-ring svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+  .score-ring circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+  .ring-bg { stroke: var(--accent-light); }
+  .ring-fill { stroke: var(--accent); stroke-dasharray: 440; stroke-dashoffset: 440; transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1); animation-delay: 0s; }
+  .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: 700; color: var(--text); animation: counterAnim 1.5s ease forwards; animation-delay: 0.3s; }
+  @keyframes counterAnim { from { opacity: 0; transform: translate(-50%, -40%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+  .final-name { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .achievements { display: flex; justify-content: center; gap: 12px; margin: 12px 0; flex-wrap: wrap; animation: fadeIn 0.4s ease forwards; animation-delay: 0.5s; opacity: 0; }
+  .badge { background: var(--surface); padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 500; border: var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 6px; }
+  .breakdown { display: flex; flex-direction: column; gap: 6px; max-width: 320px; margin: 20px auto; text-align: left; animation: fadeIn 0.4s ease forwards; animation-delay: 0.6s; opacity: 0; }
+  .breakdown-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-light); }
+  .breakdown-bar { flex: 1; height: 4px; background: var(--accent-light); border-radius: 4px; overflow: hidden; }
+  .breakdown-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 1s ease; }
+  .confetti-piece { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; top: -10px; animation: fall 3s linear forwards; pointer-events: none; z-index: 200; animation-delay: 1s; }
+  @keyframes fall { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+  /* Theme Characters */
+  .theme-blossom { --bg: #FFF5F7; --accent: #FF8FA3; --accent-light: #FFE5EC; --radius: 20px; --shadow: 0 4px 12px rgba(255,143,163,0.15); }
+  .theme-dusk { --bg: #F0F0FA; --accent: #6B4C9A; --accent-light: #E6D8F2; --radius: 12px; --shadow: 0 2px 8px rgba(107,76,154,0.12); }
+  .theme-sage { --bg: #F8FAF8; --accent: #4A8C75; --accent-light: #D6EBE2; --radius: 16px; --shadow: none; --border: 1px solid rgba(0,0,0,0.06); }
+</style>
+</head>
+<body>
+<form name="grammar-drill" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="display:none;">
+  <input type="hidden" name="bot-field" /><input type="hidden" name="form-name" value="grammar-drill" />
+</form>
+
+<header class="glass-header">
+    <div class="theme-pills">
+      <button class="theme-pill" onclick="window.applyTheme('blossom')">🌸 Blossom</button>
+      <button class="theme-pill" onclick="window.applyTheme('dusk')">🔮 Dusk</button>
+      <button class="theme-pill" onclick="window.applyTheme('sage')">🌿 Sage</button>
+      <button class="theme-pill active" onclick="window.applyTheme('slate')"> Slate</button>
+    </div>
+    <div class="header-controls">
+        <div class="name-wrap"><input type="text" id="student-name" class="name-input" placeholder="Your name"></div>
+        <button class="home-btn" onclick="window.goHome()">🏠 Home</button>
+    </div>
+</header>
+
+<div id="app" style="width: 100%;">
+  <div id="landing-screen" class="landing-screen">
+    <h1 class="hero-text" id="main-title">Welcome! What are you practising today?</h1>
+    <p class="subtitle">Master Past Simple vs Past Perfect through interactive drills.</p>
+    <div class="main-card" onclick="window.goToGrid()">
+      <div class="main-icon" data-icon-id="landing"></div>
+      <div class="main-title">Past Simple vs Past Perfect</div>
+      <div class="main-sub">62 questions · 8 stations · Full drill</div>
+      <button class="pill-btn">Start Drill</button>
+    </div>
+  </div>
+
+  <div id="grid-screen" class="hidden grid-container"></div>
+  <div id="exercise-screen" class="hidden exercise-container"><div id="stations-container"></div></div>
+  <div id="tracker-pill" class="tracker-pill hidden">
+    <button class="back-btn" onclick="window.backToGrid()">← Blocks</button>
+    <div style="width:1px; height:16px; background:var(--accent-light);"></div>
+    <span id="tracker-q">Q 0/62</span><span id="tracker-c">✅ 0</span>
+  </div>
+  <div id="final-screen" class="hidden final-screen">
+    <div class="score-ring"><svg viewBox="0 0 160 160"><circle class="ring-bg" cx="80" cy="80" r="70"/><circle class="ring-fill" cx="80" cy="80" r="70"/></svg><div class="score-text" id="final-score-display">0%</div></div>
+    <div class="final-name" id="final-greeting"></div>
+    <div class="achievements" id="badges-container"></div>
+    <p class="subtitle" id="final-msg"></p>
+    <div class="breakdown" id="breakdown-container"></div>
+    <div style="background:var(--surface); padding:12px; border-radius:12px; margin:20px auto; max-width:260px; font-size:0.8rem; color:var(--text-light); border:var(--border);">📊 Report: <span id="report-status">Ready</span></div>
+    <button class="pill-btn" onclick="location.reload()" style="max-width:160px; margin:0 auto; pointer-events:auto;">🔄 Start Over</button>
+  </div>
+</div>
+
+<script>
+const stations = [
+  { id:1, title:"Multiple Choice", subtitle:"6 questions · Recognition", type:"mc", q:[
+    {t:"We rushed to the cinema, but... By the time we arrived, the film ___ .", opts:["started","had started","was starting","has started"], c:1, ok:"`By the time` создаёт «дедлайн» в прошлом → действие уже завершилось.", err:"By the time требует акцента на завершённости до указанного момента."},
+    {t:"I tried calling her, and... When I finally reached her, she ___ just finished work.", opts:["has","had","was","did"], c:1, ok:"`Just` + завершение до звонка → Past Perfect.", err:"Действие завершилось ДО другого прошлого действия."},
+    {t:"The letter was emotional... So as I ___ it, my hands shook.", opts:["opened","had opened","was opening","open"], c:0, ok:"`As` указывает на одновременность → достаточно Past Simple.", err:"As = «в то время как», не требует сдвига времён."},
+    {t:"She's very well-traveled... She ___ to Paris twice before 2020.", opts:["went","had been","has been","was going"], c:1, ok:"`Before` + дата в прошлом → опыт до момента → Past Perfect.", err:"Опыт, завершённый до конкретного момента в прошлом."},
+    {t:"She usually feels relaxed after meals, so... After she ___ dinner, she got asleep.", opts:["had eaten","ate","was eating","has eaten"], c:0, ok:"`After` + Past Perfect подчёркивает полную завершённость первого действия.", err:"Акцент на том, что первое действие полностью завершилось перед вторым."},
+    {t:"The classroom went quiet... When the teacher came in, everyone ___ talking.", opts:["stopped","had stopped","was stopping","stops"], c:0, ok:"Быстрая реакция/последовательность → Past Simple в обеих частях.", err:"Когда действия следуют сразу друг за другом, Past Simple звучит естественнее."}
+  ]},
+  { id:2, title:"Error Correction", subtitle:"4 questions · Accuracy", type:"err", q:[
+    {opts:["By the time we arrived at the theater, the play started.","By the time we arrived at the theater, the play had started.","By the time we arrived at the theater, the play was starting."], c:1, ok:"`By the time` требует Past Perfect для действия, завершённого к моменту.", err:"Действие уже завершилось к моменту прибытия."},
+    {opts:["When I called her office, she has just finished work.","When I called her office, she was just finished work.","When I called her office, she had just finished work."], c:2, ok:"`Just` + завершение до звонка → Past Perfect.", err:"`Has` нельзя использовать с прошлым маркером `when`."},
+    {opts:["As I had opened the emotional letter, my hands shook.","As I opened the emotional letter, my hands shook.","As I was opened the emotional letter, my hands shook."], c:1, ok:"`As` + Past Simple для одновременных действий.", err:"`As` не требует сдвига времён."},
+    {opts:["Before he apologized sincerely, he has denied everything.","Before he apologized sincerely, he had denied everything.","Before he apologized sincerely, he was denying everything."], c:1, ok:"Past Perfect подчёркивает, что отрицание произошло ДО извинения.", err:"`Has` не используется в прошлом контексте."}
+  ]},
+  { id:3, title:"Match the Halves", subtitle:"4 pairs · Logic", type:"match", q:[
+    {pairs:[{l:"While I was cooking dinner...",r:"...the phone rang unexpectedly."},{l:"As soon as I saw her at the station...",r:"...I smiled and waved."},{l:"By the time he came to the meeting...",r:"...we had already finished the discussion."},{l:"Until she explained the rule clearly...",r:"...I hadn't understood the exercise."}]}
+  ]},
+  { id:4, title:"Gap Fill", subtitle:"5 gaps · Form", type:"gap", q:[
+    {t:"1. When I came to her, she ___ (be / ready) for walking yet.", kw:["had","been","ready"], m:["had not been ready", "hadn't been ready"], ok:"Порядок: had not + V3 + ready.", err:"Порядок: had not + V3 + ready."},
+    {t:"2. They moved to different cities... They ___ (not / see) each other since they left school.", kw:["had","not","seen","hadn't"], m:["hadn't seen","had not seen"], ok:"Отрицание + `since` → Past Perfect.", err:"`Not` идёт после `had`."},
+    {t:"3. ___ you ever ___ (try) sushi before your trip to Japan?", kw:["had","tried"], m:["Had / tried"], ok:"Вопрос + `ever` → Had + подлежащее + V3.", err:"В вопросах `Had` выносится в начало."},
+    {t:"4. I ___ (know) him for years before we became close friends.", kw:["had","known"], m:["had known"], ok:"Глагол состояния + `for` до прошлого момента → Past Perfect.", err:"State verbs + длительность до past moment."},
+    {t:"5. He's a prolific writer... By 2015, he ___ (already / write) three novels.", kw:["had","already","written"], m:["had already written"], ok:"`By + год` + `already` → Past Perfect.", err:"Already ставится между had и V3."}
+  ]},
+  { id:5, title:"Word Order", subtitle:"4 sentences · Syntax", type:"order", q:[
+    {w:["had","already","they","left","arrived","I","before"], valid:["They had already left before I arrived.","I had already left before they arrived."], ok:"Порядок: S + had + already + V3 + before + S + V2.", err:"Обратите внимание на позицию `already`."},
+    {w:["you","ever","had","been","before","there"], valid:["Had you ever been there before?"], ok:"Вопрос: Had + S + ever + V3 + there + before?", err:"В вопросах `Had` выносится в начало."},
+    {w:["not","had","she","finished","when","the","bell","rang"], valid:["She had not finished when the bell rang."], ok:"Отрицание + `when` + прерывающее действие.", err:"`Not` после `had`. `the` обязателен."},
+    {w:["why","asked","he","she","had","left"], valid:["He asked why she had left.", "She asked why he had left."], ok:"Косвенный вопрос: прямой порядок слов, сдвиг времён.", err:"В косвенных вопросах порядок S + V."}
+  ]},
+  { id:6, title:"Context & Meaning", subtitle:"4 questions · Nuance", type:"mc", q:[
+    {t:"When I arrived at her house, she ___ .", opts:["left","had left","was leaving","leaves"], c:1, ok:"`Had left` = ушла ДО моего приезда.", err:"`Left` = ушла ПОСЛЕ. Контекст требует Past Perfect."},
+    {t:"I woke up, ___ my teeth, and left for work.", opts:["brushed","had brushed","was brushing","brush"], c:0, ok:"Хронологическая цепочка → Past Simple в обеих частях.", err:"В рассказах порядок ясен из контекста, сдвиг не нужен."},
+    {t:"He was exhausted because he ___ all day.", opts:["worked","had worked","was working","works"], c:1, ok:"Причина состояния в прошлом → более раннее действие → Past Perfect.", err:"Он работал ДО того, как почувствовал усталость."},
+    {t:"Before I moved to Spain, I ___ any Spanish.", opts:["didn't know","hadn't known","wasn't known","haven't known"], c:1, ok:"Состояние до переезда → Past Perfect.", err:"Акцент на том, что знание отсутствовало ДО момента переезда."}
+  ]},
+  { id:7, title:"Cloze Text", subtitle:"3 texts · 30 gaps · Flow", type:"cloze", texts:[
+    { title:"A Busy Morning", parts:[ 
+      {type:"text", content:"Yesterday was a crazy day! When I "},{type:"gap", hint:"(wake up)", kw:["woke","up"], m:["woke up"], note:"Past Simple: однократное действие в конкретное время (at 7 AM)."},
+      {type:"text", content:" at 7 AM, I realized I "},{type:"gap", hint:"(already / miss)", kw:["had","already","missed"], m:["had already missed"], note:"Past Perfect: действие завершилось ДО осознания (realized)."},
+      {type:"text", content:" the bus. I "},{type:"gap", hint:"(quickly / get)", kw:["quickly","got"], m:["quickly got"], note:"Past Simple: следующее звено в цепочке событий."},
+      {type:"text", content:" dressed and "},{type:"gap", hint:"(run)", kw:["ran"], m:["ran"], note:"Past Simple: последовательное действие (got dressed and ran)."},
+      {type:"text", content:" to the station, but by the time I "},{type:"gap", hint:"(arrive)", kw:["arrived"], m:["arrived"], note:"Past Simple: момент, к которому произошло другое действие."},
+      {type:"text", content:", the train "},{type:"gap", hint:"(already / leave)", kw:["had","already","left"], m:["had already left"], note:"Past Perfect: поезд ушёл ДО момента прибытия на станцию."},
+      {type:"text", content:". I "},{type:"gap", hint:"(call)", kw:["called"], m:["called"], note:"Past Simple: следующее действие в хронологии."},
+      {type:"text", content:" my friend Anna, and she "},{type:"gap", hint:"(tell)", kw:["told"], m:["told"], note:"Past Simple: реакция/ответ после звонка."},
+      {type:"text", content:" me that she "},{type:"gap", hint:"(wait)", kw:["had","waited"], m:["had waited"], note:"Past Perfect: ожидание длилось ДО момента разговора."},
+      {type:"text", content:" for me for 20 minutes! We finally "},{type:"gap", hint:"(meet)", kw:["met"], m:["met"], note:"Past Simple: завершающее событие в цепочке."},
+      {type:"text", content:" at the café, but I "},{type:"gap", hint:"(never / feel)", kw:["had","never","felt"], m:["had never felt"], note:"Past Perfect: опыт/состояние ДО момента встречи в кафе."}
+    ], ok:"Great job! You mastered the sequence of past events.", err:"Review the order: Past Perfect for earlier actions, Past Simple for the main timeline." },
+    { title:"The Surprise Party", parts:[ 
+      {type:"text", content:"Last Saturday, we "},{type:"gap", hint:"(plan)", kw:["planned"], m:["planned"], note:"Past Simple: факт планирования в прошлом (Last Saturday)."},
+      {type:"text", content:" a surprise party for Maria. When she "},{type:"gap", hint:"(arrive)", kw:["arrived"], m:["arrived"], note:"Past Simple: момент прибытия, к которому все уже спрятались."},
+      {type:"text", content:" at the apartment, everyone "},{type:"gap", hint:"(hide)", kw:["had","hidden"], m:["had hidden"], note:"Past Perfect: спрятались ДО её прихода."},
+      {type:"text", content:" behind the furniture. She "},{type:"gap", hint:"(not / expect)", kw:["hadn't","expected","had","not","expected"], m:["hadn't expected","had not expected"], note:"Past Perfect: состояние незнания ДО момента шока."},
+      {type:"text", content:" anything, so she "},{type:"gap", hint:"(be)", kw:["was"], m:["was"], note:"Past Simple: описание состояния в конкретный момент (so she was shocked)."},
+      {type:"text", content:" completely shocked! Before we "},{type:"gap", hint:"(start)", kw:["started"], m:["started"], note:"Past Simple: следующее действие в последовательности."},
+      {type:"text", content:" the celebration, I "},{type:"gap", hint:"(realize)", kw:["realized"], m:["realized"], note:"Past Simple: момент осознания перед праздником."},
+      {type:"text", content:" that I "},{type:"gap", hint:"(forget)", kw:["had","forgotten"], m:["had forgotten"], note:"Past Perfect: забыл ДО момента осознания (realized)."},
+      {type:"text", content:" to buy candles. Luckily, Anna "},{type:"gap", hint:"(already / bring)", kw:["had","already","brought"], m:["had already brought"], note:"Past Perfect: принесла ДО момента, когда заметили отсутствие."}
+    ], ok:"Perfect! You caught all the hidden actions.", err:"Remember: actions before another past moment need Past Perfect." },
+    { title:"The Lost Keys", parts:[ 
+      {type:"text", content:"Yesterday evening, I couldn't find my keys anywhere. I "},{type:"gap", hint:"(search)", kw:["searched"], m:["searched"], note:"Past Simple: основное действие в прошлом."},
+      {type:"text", content:" the whole apartment, but I "},{type:"gap", hint:"(not / find)", kw:["didn't","find","had","not","found"], m:["didn't find","had not found"], note:"Past Simple: результат поиска (не нашёл)."},
+      {type:"text", content:" them. Then I remembered: before I "},{type:"gap", hint:"(leave)", kw:["left"], m:["left"], note:"Past Simple: момент ухода с работы (before I left)."},
+      {type:"text", content:" work, I "},{type:"gap", hint:"(put)", kw:["had","put"], m:["had put"], note:"Past Perfect: положил ключи ДО ухода с работы."},
+      {type:"text", content:" them in my bag. When I "},{type:"gap", hint:"(check)", kw:["checked"], m:["checked"], note:"Past Simple: следующее действие в хронологии."},
+      {type:"text", content:" my bag, they "},{type:"gap", hint:"(not / be)", kw:["weren't","were","not"], m:["weren't","were not"], note:"Past Simple: описание состояния в момент проверки."},
+      {type:"text", content:" there! Finally, I "},{type:"gap", hint:"(call)", kw:["called"], m:["called"], note:"Past Simple: следующее действие после проверки."},
+      {type:"text", content:" my colleague, and she "},{type:"gap", hint:"(tell)", kw:["told"], m:["told"], note:"Past Simple: ответ коллеги после звонка."},
+      {type:"text", content:" me that she "},{type:"gap", hint:"(see)", kw:["had","seen"], m:["had seen"], note:"Past Perfect: коллега видела ключи ПОСЛЕ вашего ухода."},
+      {type:"text", content:" the keys on my desk after I "},{type:"gap", hint:"(go)", kw:["had","gone","went"], m:["had gone","went"], note:"Past Perfect: уход произошёл ДО того, как коллега увидела ключи."}
+    ], ok:"Excellent! You tracked the timeline perfectly.", err:"Tip: 'before/after' clauses help identify which action came first." }
+  ]},
+  { id:8, title:"Translation RU→EN", subtitle:"5 sentences · Production", type:"trans", q:[
+    {t:"К тому моменту, как я пришёл, фильм уже начался.", kw:["by","time","arrived","film","had","already","started"], m:["By the time I arrived, the film had already started."], ok:"`By the time` + Past Perfect для завершённого действия.", err:"Обратите внимание на `had already started`."},
+    {t:"Пока я читал книгу, зазвонил телефон.", kw:["while","was","reading","book","phone","rang"], m:["While I was reading the book, the phone rang."], ok:"`While` + Past Continuous (длительное) + Past Simple (внезапное).", err:"Длительное действие прерывается."},
+    {t:"Они уже ушли до того, как я позвонил.", kw:["they","had","already","left","before","called"], m:["They had already left before I called."], ok:"`Before` не требует сдвига, но Past Perfect показывает раннее действие.", err:"`Had left` подчёркивает, что уход был раньше звонка."},
+    {t:"Я никогда не видел эту картину до вчерашнего дня.", kw:["had","never","seen","picture","until","yesterday"], m:["I had never seen this picture until yesterday."], ok:"`Never` + Past Perfect + маркер `until`.", err:"Порядок: had + never + V3."},
+    {t:"После того как она пообедала, она почувствовала сонливость.", kw:["after","had","eaten","lunch","felt","sleepy"], m:["After she had eaten lunch, she felt sleepy."], ok:"`After` + Past Simple/Past Perfect + результат.", err:"Past Perfect звучит точнее."}
+  ]}
+];
+
+// Fixed emoji arrays to prevent blank icons
+const themeConfig = {
+  blossom: { emojis:['🌸','','🔗','🔧','','💡','📚','🌍'] },
+  dusk:    { emojis:['💜','📝','🔗','','🧩','💡','','🌍'] },
+  sage:    { emojis:['🌿','📝','🔗','🔧','🧩','💡','📚','🌍'] },
+  slate:   { emojis:['🔹','📝','🔗','🔧','🧩','💡','📚',''] }
+};
+const iconMap = { landing: 0, 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7 };
+let currentTheme = 'slate';
+let studentName = "";
+const calculateTotal = () => stations.reduce((sum, s) => {
+  if (s.type === 'match') return sum + s.q[0].pairs.length;
+  if (s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
+  return sum + (s.q ? s.q.length : 0);
+}, 0);
+let globalStats = { q:0, c:0, w:0, total: calculateTotal() };
+let stationAttempts = {};
+let stationProgress = {};
+
+const STORAGE_KEY = 'grammar-drill-progress';
+window.saveProgress = function() {
+  try {
+    const data = { studentName, stationProgress, stationAttempts, globalStats, timestamp: Date.now() };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+window.loadProgress = function() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (Date.now() - data.timestamp < 24*60*60*1000) {
+      if (data.studentName) {
+        studentName = data.studentName;
+        document.getElementById('student-name').value = studentName;
+        document.getElementById('main-title').innerHTML = `Hello, <span>${studentName}</span>! Ready to drill?`;
+      }
+      if (data.stationProgress) stationProgress = data.stationProgress;
+      if (data.stationAttempts) stationAttempts = data.stationAttempts;
+      if (data.globalStats) globalStats = data.globalStats;
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+setInterval(window.saveProgress, 30000);
+window.addEventListener('beforeunload', window.saveProgress);
+
+window.applyTheme = function(name) {
+  currentTheme = name;
+  document.body.className = `theme-${name}`;
+  document.querySelectorAll('.theme-pill').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(name)));
+  const icons = themeConfig[name].emojis;
+  document.querySelectorAll('[data-icon-id]').forEach(el => {
+    const id = parseInt(el.getAttribute('data-icon-id'));
+    const idx = iconMap[id];
+    // Fallback to default icon if index is out of bounds or empty
+    el.textContent = (icons[idx] && icons[idx] !== '') ? icons[idx] : (name === 'slate' ? '🔹' : '🌸');
+  });
+}
+
+window.initThemes = function() { window.applyTheme('slate'); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.initThemes();
+  window.loadProgress();
+  window.renderGrid();
+  document.getElementById('student-name').addEventListener('input', e => {
+    studentName = e.target.value.trim();
+    document.getElementById('main-title').innerHTML = studentName ? `Hello, <span>${studentName}</span>! Ready to drill?` : `Welcome! What are you practising today?`;
+    window.saveProgress();
+  });
+});
+
+window.goToGrid = function() { document.getElementById('landing-screen').classList.add('hidden'); document.getElementById('grid-screen').classList.remove('hidden'); }
+window.startExercise = function(startBlockId) { document.getElementById('grid-screen').classList.add('hidden'); document.getElementById('exercise-screen').classList.remove('hidden'); document.getElementById('tracker-pill').classList.remove('hidden'); window.renderAllStations(startBlockId); }
+window.backToGrid = function() { document.getElementById('exercise-screen').classList.add('hidden'); document.getElementById('tracker-pill').classList.add('hidden'); document.getElementById('grid-screen').classList.remove('hidden'); }
+window.goHome = function() {
+  globalStats = { q:0, c:0, w:0, total: calculateTotal() }; stationAttempts = {}; stationProgress = {}; studentName = "";
+  document.getElementById('student-name').value = "";
+  document.getElementById('main-title').innerHTML = `Welcome! What are you practising today?`;
+  ['landing-screen', 'grid-screen', 'exercise-screen', 'final-screen', 'tracker-pill'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('landing-screen').classList.remove('hidden');
+  localStorage.removeItem(STORAGE_KEY);
+  window.renderGrid();
+}
+
+window.renderGrid = function() {
+  const grid = document.getElementById('grid-screen'); grid.innerHTML = '';
+  stations.forEach((s, i) => {
+    const total = s.type==='match' ? s.q[0].pairs.length : (s.type==='cloze' ? s.texts.reduce((sum,t)=>sum+t.parts.filter(p=>p.type==='gap').length,0) : s.q.length);
+    const card = document.createElement('div'); card.className = 'grid-card'; card.onclick = () => window.startExercise(s.id);
+    card.style.setProperty('--tint', 1 - (i * 0.12));
+    card.innerHTML = `<div class="grid-num">0${s.id}</div><div class="grid-icon" data-icon-id="${s.id}"></div><div class="grid-title">${s.title}</div><div class="grid-meta">${s.subtitle} · ${total} points</div><button class="grid-btn">Start</button>`; 
+    grid.appendChild(card);
+  }); window.applyTheme(currentTheme);
+}
+
+window.renderAllStations = function(startBlockId) {
+  const cont = document.getElementById('stations-container'); cont.innerHTML = '';
+  stations.forEach((s, i) => {
+    stationAttempts[s.id] = stationAttempts[s.id] || [];
+    stationProgress[s.id] = stationProgress[s.id] || { answered: 0, correct: 0, total: s.type==='match' ? s.q[0].pairs.length : (s.type==='cloze' ? s.texts.reduce((sum,t)=>sum+t.parts.filter(p=>p.type==='gap').length,0) : s.q.length), completed: false };
+    const total = stationProgress[s.id].total;
+    const div = document.createElement('div'); div.className = 'station'; div.id = `st-${s.id}`;
+    div.innerHTML = `<div class="station-header" onclick="window.toggleStation(${s.id})"><div class="station-num">0${s.id}</div><div class="station-icon" data-icon-id="${s.id}"></div><div class="station-info"><div class="station-title">${s.title}</div><div class="station-sub">${s.subtitle}</div></div><div class="station-badge" id="prog-${s.id}">0/${total}</div></div><div class="station-content" id="st-content-${s.id}"></div><div class="station-footer"><span style="font-size:0.8rem; color:var(--text-light);" id="footer-attempt-${s.id}"> Attempts: None</span><button class="btn-retry" onclick="window.retryStation(${s.id})">🔄 Retry</button></div>`; 
+    cont.appendChild(div);
+    window.renderStationContent(s);
+    if(s.id === startBlockId) setTimeout(() => div.classList.add('open'), 100);
+  }); window.applyTheme(currentTheme);
+}
+
+window.toggleStation = function(id) { document.getElementById(`st-${id}`).classList.toggle('open'); }
+
+window.renderStationContent = function(s) {
+  const cont = document.getElementById(`st-content-${s.id}`); cont.innerHTML = '';
+  if(s.type === 'mc' || s.type === 'err') {
+    s.q.forEach((q, i) => {
+      const qBlock = document.createElement('div'); qBlock.className = s.type === 'err' ? 'q-block err-q' : 'q-block';
+      qBlock.innerHTML = `<div class="q-text">${i+1}. ${q.t || "Выберите грамматически верное предложение:"}</div><div class="options" id="opts-${s.id}-${i}"></div><div class="feedback" id="fb-${s.id}-${i}"></div>`;
+      cont.appendChild(qBlock);
+      const optsDiv = document.getElementById(`opts-${s.id}-${i}`);
+      q.opts.forEach((opt, j) => {
+        const btn = document.createElement('button'); btn.className='opt'; btn.textContent=opt;
+        btn.addEventListener('click', () => window.handleMC(s.id, i, j, q.c, btn, optsDiv, q, qBlock));
+        optsDiv.appendChild(btn);
+      });
+    });
+  } else if(s.type === 'match') {
+    cont.innerHTML = `<div style="padding:16px; color:var(--text-light); font-size:0.85rem;">💡 Tap left card, then matching right card.</div><div class="match-area" id="match-${s.id}"></div><div class="feedback" id="fb-${s.id}" style="margin:16px; text-align:center;"></div>`;
+    window.renderMatch(s.id, s.q[0].pairs);
+  } else if(s.type === 'gap') {
+    cont.innerHTML = `<div style="padding:16px; color:var(--text-light); font-size:0.85rem;"> Type the right form.</div>`;
+    s.q.forEach((q,i) => {
+      const qBlock = document.createElement('div'); qBlock.className='q-block';
+      qBlock.innerHTML = `<div class="q-text">${q.t}</div><input class="input-field" id="gap-${s.id}-${i}" placeholder="Type answer..."><button class="btn-check" onclick="window.checkGap(${s.id}, ${i})">Check</button><div class="feedback" id="fb-${s.id}-${i}"></div>`;
+      cont.appendChild(qBlock);
+    });
+  } else if(s.type === 'order') {
+    cont.innerHTML = `<div style="padding:16px; color:var(--text-light); font-size:0.85rem;">🔧 Tap words to build sentence. Then click Confirm.</div>`;
+    s.q.forEach((q,i) => {
+      const qBlock = document.createElement('div'); qBlock.className='q-block';
+      qBlock.innerHTML = `<div class="word-pool" id="pool-${s.id}-${i}"></div><div class="answer-line" id="line-${s.id}-${i}"></div><button class="btn-check" id="btn-order-${s.id}-${i}" onclick="window.checkOrder(${s.id}, ${i})">🔒 Confirm Answer</button><div class="feedback" id="fb-${s.id}-${i}"></div>`;
+      cont.appendChild(qBlock);
+      window.renderWordOrderTiles(s.id, i, q.w, qBlock);
+    });
+  } else if(s.type === 'cloze') {
+    cont.innerHTML = `<div style="padding:16px; color:var(--text-light); font-size:0.85rem;">🔧 Read the text. Type the correct verb form in each gap.</div>`;
+    s.texts.forEach((text, tIdx) => {
+      const textBlock = document.createElement('div'); textBlock.className = 'q-block';
+      textBlock.innerHTML = `<div class="q-text" style="margin-bottom:8px;"><b>${text.title}</b></div><div class="cloze-text" id="cloze-${s.id}-${tIdx}"></div><button class="btn-check" id="btn-cloze-${s.id}-${tIdx}" onclick="window.checkCloze(${s.id}, ${tIdx})">✅ Check Text</button><div class="feedback" id="fb-cloze-${s.id}-${tIdx}"></div>`;
+      cont.appendChild(textBlock);
+      window.renderClozeText(s.id, tIdx, text.parts);
+    });
+  } else if(s.type === 'trans') {
+    cont.innerHTML = `<div style="padding:16px; color:var(--text-light); font-size:0.85rem;"> Translate using correct tenses. Keywords will be checked.</div>`;
+    s.q.forEach((q,i) => {
+      const qBlock = document.createElement('div'); qBlock.className='q-block';
+      qBlock.innerHTML = `<div class="q-text">${q.t}</div><textarea class="input-field" id="trans-${s.id}-${i}" placeholder="Type translation..." style="min-height:80px; resize:none;"></textarea><button class="btn-check" onclick="window.checkTrans(${s.id}, ${i})">Check</button><div class="feedback" id="fb-${s.id}-${i}"></div>`;
+      cont.appendChild(qBlock);
+    });
+  }
+}
+
+const triggerAnim = (block, isSuccess) => {
+  block.classList.remove('pop-success', 'shake');
+  void block.offsetWidth;
+  block.classList.add(isSuccess ? 'pop-success' : 'shake');
+};
+
+window.handleMC = function(stId, qIdx, sel, correct, btn, container, qData, qBlock) {
+  if(btn.disabled || container.dataset.answered) return;
+  container.dataset.answered = "true";
+  const all = container.querySelectorAll('.opt'); all.forEach(b => b.disabled = true);
+  const fb = document.getElementById(`fb-${stId}-${qIdx}`);
+  if(sel === correct) {
+    btn.classList.add('correct'); fb.className = 'feedback show success'; fb.innerHTML = `🟢 Абсолютно верно! ${qData.ok}`;
+    triggerAnim(qBlock, true); window.recordAnswer(stId, true);
+  } else {
+    btn.classList.add('wrong'); all[correct].classList.add('correct');
+    fb.className = 'feedback show error'; fb.innerHTML = `🔴 Oops! Correct: ${qData.opts[correct]}. → ${qData.err}`;
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'btn-retry-q';
+    retryBtn.innerHTML = '🔄 Retry Question';
+    retryBtn.onclick = function() {
+      container.dataset.answered = "";
+      all.forEach(b => { b.disabled = false; b.classList.remove('correct','wrong'); });
+      fb.className = 'feedback'; fb.innerHTML = '';
+      qBlock.classList.remove('pop-success','shake');
+    };
+    fb.appendChild(retryBtn);
+    triggerAnim(qBlock, false); window.recordAnswer(stId, false);
+  }
+}
+
+window.renderMatch = function(id, pairs) {
+  const cont = document.getElementById(`match-${id}`); cont.innerHTML = '<div class="match-col" id="ml"></div><div class="match-col" id="mr"></div>';
+  let selId = null, matched = 0;
+  const shuffledR = [...pairs].sort(()=>Math.random()-0.5);
+  pairs.forEach((p, i) => {
+    const el = document.createElement('div'); el.className='match-item'; el.textContent=p.l; el.dataset.id=i;
+    el.onclick = () => { document.querySelectorAll('#ml .match-item').forEach(d=>d.classList.remove('selected')); el.classList.add('selected'); selId=i; };
+    document.getElementById('ml').appendChild(el);
+  });
+  shuffledR.forEach(p => {
+    const targetId = pairs.findIndex(x=>x.r===p.r);
+    const el = document.createElement('div'); el.className='match-item'; el.textContent=p.r; el.dataset.id=targetId;
+    el.onclick = () => {
+      if(selId !== null && parseInt(el.dataset.id) === selId) {
+        el.classList.add('matched'); document.querySelector(`#ml .match-item[data-id="${selId}"]`).classList.add('matched');
+        selId = null; matched++; window.recordAnswer(id, true);
+        if(matched === pairs.length) { document.getElementById(`fb-${id}`).innerHTML = `🟢 Абсолютно верно! Все пары соединены.`; document.getElementById(`fb-${id}`).classList.add('show','success'); }
+      } else if(selId !== null) { el.style.borderColor='var(--accent)'; setTimeout(()=>el.style.borderColor='', 400); }
+    };
+    document.getElementById('mr').appendChild(el);
+  });
+}
+
+window.renderClozeText = function(stId, tIdx, parts) {
+  const cont = document.getElementById(`cloze-${stId}-${tIdx}`); cont.innerHTML = '';
+  parts.forEach(part => {
+    if(part.type === 'text') cont.appendChild(document.createTextNode(part.content));
+    else { 
+      const input = document.createElement('input'); 
+      input.type = 'text'; input.className = 'cloze-input'; input.placeholder = part.hint; 
+      input.dataset.kw = JSON.stringify(part.kw); input.dataset.model = JSON.stringify(part.m); 
+      input.addEventListener('focus', () => input.scrollIntoView({behavior: 'smooth', block: 'center'}));
+      cont.appendChild(input); 
+    }
+  });
+}
+
+// Smart Cloze Error Reporting
+window.checkCloze = function(stId, tIdx) {
+  const text = stations.find(s=>s.id===stId).texts[tIdx];
+  const inputs = document.querySelectorAll(`#cloze-${stId}-${tIdx} .cloze-input`);
+  const btn = document.getElementById(`btn-cloze-${stId}-${tIdx}`); if(btn.disabled) return; btn.disabled = true;
+  
+  let correctCount = 0;
+  const errors = [];
+  
+  inputs.forEach((inp, idx) => {
+    const val = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
+    const modelArr = JSON.parse(inp.dataset.model);
+    const gapConfig = text.parts.find(p => p.type === 'gap' && p.hint === inp.placeholder);
+    const isCorrect = JSON.parse(inp.dataset.kw).every(k => val.includes(k.toLowerCase())) || modelArr.some(ans => val === ans.toLowerCase().replace(/\s+/g, ' '));
+    
+    if(isCorrect) { inp.classList.add('correct'); correctCount++; } 
+    else { 
+      inp.classList.add('wrong'); inp.placeholder = modelArr[0];
+      if(gapConfig) errors.push({ hint: gapConfig.hint, correct: modelArr[0], note: gapConfig.note || '' });
+    }
+  });
+  
+  const fb = document.getElementById(`fb-cloze-${stId}-${tIdx}`);
+  if(correctCount === inputs.length) {
+    fb.className = 'feedback show success';
+    fb.innerHTML = `🟢 ${text.ok}`;
+  } else {
+    fb.className = 'feedback show error';
+    let html = `🔴 Found ${errors.length} mistake${errors.length>1?'s':''}. Check highlighted gaps:<ul>`;
+    errors.forEach(e => {
+      html += `<li><b>${e.hint}</b> → Correct: <span style="color:#2F855A;font-weight:500;">${e.correct}</span>`;
+      if(e.note) html += `<span class="rule">💡 ${e.note}</span>`;
+      html += `</li>`;
+    });
+    html += `</ul>`;
+    fb.innerHTML = html;
+  }
+  for(let i=0; i<inputs.length; i++) window.recordAnswer(stId, i < correctCount);
+}
+
+window.checkGap = function(stId, idx) {
+  const q = stations.find(x=>x.id===stId).q[idx]; const inp = document.getElementById(`gap-${stId}-${idx}`);
+  const fb = document.getElementById(`fb-${stId}-${idx}`); const btn = inp.nextElementSibling; const qBlock = inp.closest('.q-block');
+  if(btn.disabled) return; btn.disabled = true;
+  const val = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
+  const match = q.kw.every(k => val.includes(k.toLowerCase().trim())) || (Array.isArray(q.m) ? q.m : [q.m]).some(ans => val === ans.toLowerCase().replace(/\s+/g, ' '));
+  if(match) { inp.classList.add('correct'); fb.className='feedback show success'; fb.innerHTML=`🟢 Абсолютно верно! ${q.ok}`; triggerAnim(qBlock, true); window.recordAnswer(stId, true); }
+  else { 
+    inp.classList.add('wrong'); 
+    const modelText = Array.isArray(q.m) ? q.m[0] : q.m;
+    const fbDiv = document.createElement('div');
+    fbDiv.className = 'feedback show error';
+    fbDiv.innerHTML = `🔴 Oops! Incorrect.`;
+    const showBtn = document.createElement('button');
+    showBtn.className = 'btn-show'; showBtn.textContent = '👁️ Show Answer';
+    showBtn.onclick = function() { fbDiv.innerHTML = `Model: ${modelText}. → ${q.err}`; };
+    fbDiv.appendChild(showBtn); qBlock.appendChild(fbDiv);
+    triggerAnim(qBlock, false); window.recordAnswer(stId, false);
+  }
+}
+window.checkTrans = function(stId, idx) {
+  const q = stations.find(x=>x.id===stId).q[idx]; const inp = document.getElementById(`trans-${stId}-${idx}`);
+  const fb = document.getElementById(`fb-${stId}-${idx}`); const btn = inp.nextElementSibling; const qBlock = inp.closest('.q-block');
+  if(btn.disabled) return; btn.disabled = true;
+  const val = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
+  const match = q.kw.every(k => val.includes(k.toLowerCase()));
+  if(match) { inp.classList.add('correct'); fb.className='feedback show success'; fb.innerHTML=`🟢 Абсолютно верно! ${q.ok}`; triggerAnim(qBlock, true); window.recordAnswer(stId, true); }
+  else { 
+    inp.classList.add('wrong'); 
+    const fbDiv = document.createElement('div');
+    fbDiv.className = 'feedback show error';
+    fbDiv.innerHTML = `🔴 Oops! Incorrect.`;
+    const showBtn = document.createElement('button');
+    showBtn.className = 'btn-show'; showBtn.textContent = '️ Show Answer';
+    showBtn.onclick = function() { fbDiv.innerHTML = `Model: ${q.m}. → ${q.err}`; };
+    fbDiv.appendChild(showBtn); qBlock.appendChild(fbDiv);
+    triggerAnim(qBlock, false); window.recordAnswer(stId, false);
+  }
+}
+window.renderWordOrderTiles = function(stId, idx, words, qBlock) {
+  const pool = document.getElementById(`pool-${stId}-${idx}`); const line = document.getElementById(`line-${stId}-${idx}`);
+  pool.innerHTML=''; line.innerHTML='';
+  [...words].sort(()=>Math.random()-0.5).forEach(w => {
+    const t = document.createElement('div'); t.className='word-tile'; t.textContent=w;
+    t.onclick = () => { pool.removeChild(t); const nt = document.createElement('div'); nt.className='word-tile'; nt.textContent=w; nt.onclick=()=>{line.removeChild(nt);pool.appendChild(t);}; line.appendChild(nt); };
+    pool.appendChild(t);
+  });
+}
+window.checkOrder = function(stId, idx) {
+  const q = stations.find(x=>x.id===stId).q[idx]; const line = document.getElementById(`line-${stId}-${idx}`);
+  const fb = document.getElementById(`fb-${stId}-${idx}`); const btn = document.getElementById(`btn-order-${stId}-${idx}`); const qBlock = line.closest('.q-block');
+  if(btn.disabled) return; btn.disabled = true;
+  const built = Array.from(line.children).map(c=>c.textContent).join(' ').replace(/\s*,\s*/g,', ').replace(/\s+/g,' ');
+  const isMatch = q.valid.map(v => v.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ')).includes(built.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' '));
+  if(isMatch) { fb.className='feedback show success'; fb.innerHTML=`🟢 Абсолютно верно! ${q.ok}`; line.style.borderColor = '#38A169'; triggerAnim(qBlock, true); window.recordAnswer(stId, true); }
+  else { fb.className='feedback show error'; fb.innerHTML=` Oops! Model: ${q.valid[0]}. → ${q.err}`; line.style.borderColor = '#E53E3E'; triggerAnim(qBlock, false); window.recordAnswer(stId, false); }
+}
+
+window.recordAnswer = function(stId, isCorrect) {
+  const prog = stationProgress[stId]; prog.answered++; if(isCorrect) prog.correct++;
+  window.updateTracker(); window.saveProgress();
+  if(prog.answered === prog.total && !prog.completed) {
+    prog.completed = true; stationAttempts[stId].push(`${prog.correct}/${prog.total}`);
+    document.getElementById(`footer-attempt-${stId}`).textContent = `📊 Attempt ${stationAttempts[stId].length}: ${prog.correct}/${prog.total}`;
+    document.getElementById(`prog-${stId}`).textContent = `${prog.correct}/${prog.total}`;
+    if(Object.values(stationProgress).every(p => p.completed)) setTimeout(window.showFinal, 600);
+  }
+}
+window.updateTracker = function() {
+  globalStats.q = Object.values(stationProgress).reduce((sum,p) => sum + p.answered, 0);
+  globalStats.c = Object.values(stationProgress).reduce((sum,p) => sum + p.correct, 0);
+  document.getElementById('tracker-q').textContent = `Q ${globalStats.q}/${globalStats.total}`;
+  document.getElementById('tracker-c').textContent = `✅ ${globalStats.c}`;
+}
+window.retryStation = function(id) {
+  const s = stations.find(x=>x.id===id);
+  stationProgress[id] = { answered: 0, correct: 0, total: s.type==='match' ? s.q[0].pairs.length : (s.type==='cloze' ? s.texts.reduce((sum,t)=>sum+t.parts.filter(p=>p.type==='gap').length,0) : s.q.length), completed: false };
+  window.renderStationContent(s);
+  document.getElementById(`footer-attempt-${id}`).textContent = `📊 Attempts: None`;
+  document.getElementById(`prog-${id}`).textContent = `0/${stationProgress[id].total}`;
+  window.updateTracker(); document.getElementById(`st-${id}`).classList.add('open');
+}
+
+window.showFinal = function() {
+  document.getElementById('exercise-screen').classList.add('hidden'); document.getElementById('tracker-pill').classList.add('hidden');
+  document.getElementById('final-screen').classList.remove('hidden');
+  document.getElementById('final-greeting').textContent = `🎉 ${studentName || 'Student'}!`;
+  const pct = Math.round((globalStats.c / globalStats.total) * 100);
+  const ring = document.querySelector('.ring-fill'); const circ = 2 * Math.PI * 70;
+  ring.style.strokeDasharray = circ; ring.style.strokeDashoffset = circ;
+  setTimeout(() => { ring.style.strokeDashoffset = circ - (circ * pct / 100); }, 100);
+  let cur = 0; const el = document.getElementById('final-score-display');
+  const step = setInterval(() => { cur += 1; el.textContent = cur + '%'; if(cur >= pct) clearInterval(step); }, 15);
+  
+  const bd = document.getElementById('breakdown-container'); bd.innerHTML = '';
+  stations.forEach(s => { const p = stationProgress[s.id]; const w = Math.round((p.correct/p.total)*100);
+    bd.innerHTML += `<div class="breakdown-item"><span style="width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.title}</span><div class="breakdown-bar"><div class="breakdown-fill" style="width:${w}%"></div></div><span>${w}%</span></div>`;
+  });
+  
+  const badges = document.getElementById('badges-container'); badges.innerHTML = '';
+  if(pct === 100) badges.innerHTML += `<div class="badge">🎯 Perfect Run</div>`;
+  if(pct >= 90) badges.innerHTML += `<div class="badge">⚡ High Accuracy</div>`;
+  if(stationAttempts[7] && stationAttempts[7].length === 1) badges.innerHTML += `<div class="badge">📖 Fluent Reader</div>`;
+  
+  if(pct >= 80) { document.getElementById('final-msg').textContent = "✨ Outstanding! You've mastered the nuances!"; window.spawnConfetti(); }
+  else { document.getElementById('final-msg').textContent = "🌸 Good effort! Review stations and retry."; }
+  window.sendReport();
+}
+window.spawnConfetti = function() { for(let i=0; i<30; i++) { const p = document.createElement('div'); p.className='confetti-piece'; p.style.left = Math.random()*100+'%'; p.style.animationDuration = (2+Math.random()*2)+'s'; document.body.appendChild(p); } }
+window.sendReport = async function() {
+  const statusEl = document.getElementById('report-status'); statusEl.textContent = 'Sending...';
+  try {
+    const fd = new URLSearchParams(); fd.append('form-name', 'grammar-drill'); fd.append('student_name', studentName || 'Unknown');
+    fd.append('date', new Date().toLocaleString()); fd.append('final_score', document.getElementById('final-score-display').textContent);
+    stations.forEach(s => fd.append(`station_${s.id}_attempts`, stationAttempts[s.id].join(' | ')));
+    const res = await fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:fd });
+    statusEl.textContent = res.ok ? "✅ Sent!" : "⚠️ Error";
+  } catch(e) { statusEl.textContent = "⚠️ Error"; }
+}
+</script>
+</body>
+</html>
