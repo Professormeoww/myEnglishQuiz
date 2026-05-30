@@ -196,11 +196,6 @@
   .theme-blossom { --bg: #FFF5F7; --accent: #FF8FA3; --accent-light: #FFE5EC; --radius: 20px; --shadow: 0 4px 12px rgba(255,143,163,0.15); }
   .theme-dusk { --bg: #F0F0FA; --accent: #6B4C9A; --accent-light: #E6D8F2; --radius: 12px; --shadow: 0 2px 8px rgba(107,76,154,0.12); }
   .theme-sage { --bg: #F8FAF8; --accent: #4A8C75; --accent-light: #D6EBE2; --radius: 16px; --shadow: none; --border: 1px solid rgba(0,0,0,0.06); }
-    /* Theme Characters */
-  .theme-blossom { --bg: #FFF5F7; --accent: #FF8FA3; --accent-light: #FFE5EC; --radius: 20px; --shadow: 0 4px 12px rgba(255,143,163,0.15); }
-  .theme-dusk { --bg: #F0F0FA; --accent: #6B4C9A; --accent-light: #E6D8F2; --radius: 12px; --shadow: 0 2px 8px rgba(107,76,154,0.12); }
-  .theme-sage { --bg: #F8FAF8; --accent: #4A8C75; --accent-light: #D6EBE2; --radius: 16px; --shadow: none; --border: 1px solid rgba(0,0,0,0.06); }
-
   /* Lesson Menu Cards */
   .lesson-card {
     background: var(--surface); 
@@ -526,10 +521,14 @@ window.applyTheme = function(name) {
 }
 
 window.initThemes = function() { window.applyTheme('slate'); }
-  window.showLessonMenu = function() {
+
+window.showLessonMenu = function() {
   document.getElementById('landing-screen').classList.add('hidden');
   document.getElementById('lesson-menu-screen').classList.remove('hidden');
-    // ▼▼▼▼▼▼
+};
+
+// ▼▼▼ ЭТИ ФУНКЦИИ ДОЛЖНЫ БЫТЬ ОТДЕЛЬНО ▼▼▼
+
 window.renderLessonMenu = function() {
   const list = document.getElementById('lesson-list'); 
   list.innerHTML = '';
@@ -574,8 +573,6 @@ window.selectLesson = function(lessonKey) {
 };
 
 // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
-};
-
 document.addEventListener('DOMContentLoaded', () => {
   window.initThemes();
   window.renderLessonMenu();
