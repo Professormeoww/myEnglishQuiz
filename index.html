@@ -450,7 +450,7 @@ window.renderStationContent = function(s) {
   if(s.type === 'mc' || s.type === 'err') {
     s.q.forEach((q, i) => {
       const qBlock = document.createElement('div'); qBlock.className = s.type === 'err' ? 'q-block err-q' : 'q-block';
-      qBlock.innerHTML = `<div class="q-text">${i+1}. ${q.t || ""}</div><div class="options" id="opts-${s.id}-${i}"></div><div class="feedback" id="fb-${s.id}-${i}"></div>`; ${q.t || ""}</div><div class="options" id="opts-${s.id}-${i}"></div><div class="feedback" id="fb-${s.id}-${i}"></div>`;
+      qBlock.innerHTML = `<div class="q-text">${i+1}. ${q.t || ""}</div><div class="options" id="opts-${s.id}-${i}"></div><div class="feedback" id="fb-${s.id}-${i}"></div>`; 
       cont.appendChild(qBlock);
       const optsDiv = document.getElementById(`opts-${s.id}-${i}`);
       q.opts.forEach((opt, j) => {
