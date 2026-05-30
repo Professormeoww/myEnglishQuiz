@@ -196,6 +196,57 @@
   .theme-blossom { --bg: #FFF5F7; --accent: #FF8FA3; --accent-light: #FFE5EC; --radius: 20px; --shadow: 0 4px 12px rgba(255,143,163,0.15); }
   .theme-dusk { --bg: #F0F0FA; --accent: #6B4C9A; --accent-light: #E6D8F2; --radius: 12px; --shadow: 0 2px 8px rgba(107,76,154,0.12); }
   .theme-sage { --bg: #F8FAF8; --accent: #4A8C75; --accent-light: #D6EBE2; --radius: 16px; --shadow: none; --border: 1px solid rgba(0,0,0,0.06); }
+    /* Theme Characters */
+  .theme-blossom { --bg: #FFF5F7; --accent: #FF8FA3; --accent-light: #FFE5EC; --radius: 20px; --shadow: 0 4px 12px rgba(255,143,163,0.15); }
+  .theme-dusk { --bg: #F0F0FA; --accent: #6B4C9A; --accent-light: #E6D8F2; --radius: 12px; --shadow: 0 2px 8px rgba(107,76,154,0.12); }
+  .theme-sage { --bg: #F8FAF8; --accent: #4A8C75; --accent-light: #D6EBE2; --radius: 16px; --shadow: none; --border: 1px solid rgba(0,0,0,0.06); }
+
+  /* Lesson Menu Cards */
+  .lesson-card {
+    background: var(--surface); 
+    border-radius: var(--radius); 
+    padding: 24px; 
+    border: var(--border); 
+    box-shadow: var(--shadow);
+    cursor: pointer; 
+    transition: var(--transition); 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    position: relative; 
+    overflow: hidden;
+  }
+  .lesson-card:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+  }
+  .lesson-card::before { 
+    content: ''; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    height: 4px; 
+    background: linear-gradient(90deg, var(--accent), var(--accent-light)); 
+  }
+  .lesson-card h3 { 
+    font-family: var(--font-serif); 
+    font-size: 1.3rem; 
+    margin: 0; 
+    color: var(--text); 
+  }
+  .lesson-card p { 
+    color: var(--text-light); 
+    font-size: 0.85rem; 
+    margin: 0; 
+  }
+  .lesson-card .meta { 
+    font-size: 0.8rem; 
+    color: var(--accent); 
+    font-weight: 600; 
+    margin-top: auto; 
+    padding-top: 10px; 
+  }
 </style>
 </head>
 <body>
@@ -478,6 +529,51 @@ window.initThemes = function() { window.applyTheme('slate'); }
   window.showLessonMenu = function() {
   document.getElementById('landing-screen').classList.add('hidden');
   document.getElementById('lesson-menu-screen').classList.remove('hidden');
+    // ▼▼▼▼▼▼
+window.renderLessonMenu = function() {
+  const list = document.getElementById('lesson-list'); 
+  list.innerHTML = '';
+  
+  Object.keys(COURSE).forEach(key => {
+    const lesson = COURSE[key];
+    const total = lesson.reduce((sum, s) => {
+      if(s.type === 'match') return sum + s.q[0].pairs.length;
+      if(s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
+      return sum + (s.q ? s.q.length : 0);
+    }, 0);
+    
+    const card = document.createElement('div'); 
+    card.className = 'lesson-card';
+    card.onclick = () => window.selectLesson(key);
+    
+    const topicName = key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    card.innerHTML = `
+      <h3>${topicName}</h3>
+      <p>${lesson[0]?.desc || 'Grammar practice'}</p>
+      <div class="meta">${total} questions · ${lesson.length} stations</div>
+    `;
+    list.appendChild(card);
+  });
+};
+
+window.selectLesson = function(lessonKey) {
+  currentLesson = lessonKey;
+  stations = COURSE[lessonKey];
+  
+  // Сброс прогресса для нового урока
+  globalStats = { q:0, c:0, w:0, total: calculateTotal() };
+  stationAttempts = {}; 
+  stationProgress = {};
+  
+  window.updateTracker();
+  
+  // Переключение экранов
+  document.getElementById('lesson-menu-screen').classList.add('hidden');
+  document.getElementById('grid-screen').classList.remove('hidden');
+  window.renderGrid();
+};
+
+// ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
 };
 
 document.addEventListener('DOMContentLoaded', () => {
