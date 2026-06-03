@@ -608,7 +608,7 @@ window.renderLessonMenu = function() {
     card.className = 'lesson-card';
     card.onclick = () => window.selectLesson(key);
     
-    const topicName = key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const topicName = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     card.innerHTML = `
       <h3>${topicName}</h3>
       <p>${lesson.desc || 'Comprehensive grammar practice'}</p>
