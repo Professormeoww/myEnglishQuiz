@@ -488,14 +488,6 @@ const COURSE = {
     { id: 'C', label: 'Familiarity / Adaptation' }
   ],
   items:[
-    {text:"I used to live in a small village.", correct:"A"},
-    {text:"Every summer, we would go to the sea.", correct:"B"},
-    {text:"She is used to waking up early.", correct:"C"},
-    // ... ещё 5 карточек
-  ], 
-  ok:"Отлично! Вы чётко разделяете прошедшие привычки, повторяющиеся действия и текущую адаптацию.", 
-  err:"Проверьте: `would` не используется с глаголами состояния (`be, have, know`), а `be/get used to` всегда относятся к настоящему или процессу."
-},
       {text:"I used to live in a small village.", correct:"A"},
       {text:"Every summer, we would go to the sea.", correct:"B"},
       {text:"She is used to waking up early.", correct:"C"},
@@ -504,8 +496,10 @@ const COURSE = {
       {text:"My grandfather would always tell us stories.", correct:"B"},
       {text:"When I was a child, I would cry easily.", correct:"B"},
       {text:"I am not used to driving on the left yet.", correct:"C"}
-    ], ok:"Отлично! Вы чётко разделяете прошедшие привычки, повторяющиеся действия и текущую адаптацию.", err:"Проверьте: `would` не используется с глаголами состояния (`be, have, know`), а `be/get used to` всегда относятся к настоящему или процессу."},
-
+    ], 
+    ok:"Отлично! Вы чётко разделяете прошедшие привычки, повторяющиеся действия и текущую адаптацию.", 
+  err:"Проверьте: `would` не используется с глаголами состояния (`be, have, know`), а `be/get used to` всегда относятся к актуальному состоянию или процессу привыкания."
+},
     // 2. Multiple Choice
     { id:2, title:"Multiple Choice", subtitle:"8 questions · Recognition", type:"mc", desc:"Выберите грамматически верный вариант.", q:[
       {t:"I ___ afraid of spiders when I was little.", opts:["used to be","would be","am used to being"], c:0, ok:"`Used to` + state verb (be) — классика для описания прошлых состояний.", err:"`Would` нельзя использовать с глаголами состояния (`be, have, know, like`)."},
