@@ -109,11 +109,13 @@
   @keyframes popSuccess { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.01); } }
   @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
   .q-text { font-size: 1rem; margin-bottom: 12px; font-weight: 500; line-height: 1.4;}
-  .hint {
+.hint {
   color: var(--text-light);
-  opacity: 0.6;
+  opacity: 0.7;
   font-size: 0.85em;
   font-weight: 400;
+  font-style: italic;        /* ← Добавлено: курсив */
+  white-space: nowrap;       /* ← Чтобы не переносилось */
 }
   
   .options { display: flex; flex-direction: column; gap: 8px; }
@@ -449,14 +451,14 @@ const COURSE = {
         {opts:["I would know him well when we were students.","I used to know him well when we were students.","I was used to know him well."], c:1, ok:"`Know` — глагол состояния. Только `used to`.", err:"`Would` + state verb = ошибка. Используйте `used to`."}
       ]},
       { id:4, title:"Gap Fill", subtitle:"8 gaps · Tense Focus", type:"gap", desc:"Вставьте правильную форму used to, be used to, get used to или would.", q:[
-        {t:'1. By 2010, he ___ (be) used to working from home.', kw:["had","been"], m:["had been"], ok:"Past Perfect (`had been`) для состояния, завершённого до 2010 года.", err:"`By + год в прошлом` требует Past Perfect."},
-        {t:'2. Don\'t worry, you ___ (get) used to the schedule soon.', kw:["will","get"], m:["will get"], ok:"Future Simple (`will get`) для предсказания/обещания.", err:"`Soon` указывает на будущее. Используйте `will`."},
-        {t:'3. When they first moved here, they ___ (not / be) used to the traffic.', kw:["were","not"], m:["were not","weren't"], ok:"Past Simple (`were not`) для описания факта в прошлом.", err:"Описание состояния в конкретный момент прошлого → Past Simple."},
-        {t:'4. I ___ (use to) ride a bike to school, but now I drive.', kw:["used","to"], m:["used to"], ok:"Past Habit (`used to`) + контраст с настоящим.", err:"Для прошлых привычек, которых сейчас нет, используем `used to`."},
-        {t:'5. She ___ (get) used to her new glasses after a few days.', kw:["got"], m:["got"], ok:"Past Simple (`got`) для завершённого процесса в прошлом.", err:"`After a few days` указывает на завершённое действие → Past Simple."},
-        {t:'6. He ___ (not / be) used to the cold winters when he lived in Russia.', kw:["was","not"], m:["was not","wasn't"], ok:"Past Simple negative для описания прошлого состояния.", err:"Состояние в прошлом → `wasn't used to`."},
-        {t:'7. We ___ (use to) eat out every Friday, but now we cook at home.', kw:["used","to"], m:["used to"], ok:"`Used to` для регулярного действия в прошлом, которое прекратилось.", err:"Контраст `but now` требует `used to`."},
-        {t:'8. It\'s strange now, but I ___ (get) used to it eventually.', kw:["will","get"], m:["will get"], ok:"Future Simple для предсказания адаптации.", err:"`Eventually` + будущее → `will get`."}
+  {t:'1. By 2010, he ___ <span class="hint">(be)</span> used to working from home.', kw:["had","been"], m:["had been","had been used to"], ok:"Past Perfect (`had been`) для состояния, завершённого до 2010 года.", err:"`By + год в прошлом` требует Past Perfect."},
+  {t:'2. Don\'t worry, you ___ <span class="hint">(get)</span> used to the schedule soon.', kw:["will","get"], m:["will get","will get used to"], ok:"Future Simple (`will get`) для предсказания/обещания.", err:"`Soon` указывает на будущее. Используйте `will`."},
+  {t:'3. When they first moved here, they ___ <span class="hint">(not / be)</span> used to the traffic.', kw:["were","not"], m:["were not","weren't","were not used to","weren't used to"], ok:"Past Simple (`were not`) для описания факта в прошлом.", err:"Описание состояния в конкретный момент прошлого → Past Simple."},
+  {t:'4. I ___ <span class="hint">(use to)</span> ride a bike to school, but now I drive.', kw:["used","to"], m:["used to"], ok:"Past Habit (`used to`) + контраст с настоящим.", err:"Для прошлых привычек, которых сейчас нет, используем `used to`."},
+  {t:'5. She ___ <span class="hint">(get)</span> used to her new glasses after a few days.', kw:["got"], m:["got","got used to"], ok:"Past Simple (`got`) для завершённого процесса в прошлом.", err:"`After a few days` указывает на завершённое действие → Past Simple."},
+  {t:'6. He ___ <span class="hint">(not / be)</span> used to the cold winters when he lived in Russia.', kw:["was","not"], m:["was not","wasn't","was not used to","wasn't used to"], ok:"Past Simple negative для описания прошлого состояния.", err:"Состояние в прошлом → `wasn't used to`."},
+  {t:'7. We ___ <span class="hint">(use to)</span> eat out every Friday, but now we cook at home.', kw:["used","to"], m:["used to"], ok:"`Used to` для регулярного действия в прошлом, которое прекратилось.", err:"Контраст `but now` требует `used to`."},
+  {t:'8. It\'s strange now, but I ___ <span class="hint">(get)</span> used to it eventually.', kw:["will","get"], m:["will get","will get used to"], ok:"Future Simple для предсказания адаптации.", err:"`Eventually` + будущее → `will get`."}
       ]},
       { id:5, title:"Word Order", subtitle:"6 sentences · Syntax", type:"order", desc:"Соберите предложение, расставив слова в правильном порядке.", q:[
         {w:["to","used","He","waking","is","up","early"], valid:["He is used to waking up early."], ok:"Порядок: S + be + used to + V-ing.", err:"Не забывайте `is` перед `used to`."},
