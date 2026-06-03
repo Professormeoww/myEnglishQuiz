@@ -242,6 +242,19 @@
     margin-top: auto; 
     padding-top: 10px; 
   }
+    /* Sorting Exercise */
+  .sort-container { padding: 10px; }
+  .sort-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; min-height: 50px; padding: 10px; background: #F8F9FA; border-radius: 12px; border: 2px dashed var(--accent-light); transition: var(--transition); }
+  .sort-item { padding: 10px 14px; background: var(--surface); border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: var(--transition); user-select: none; display: flex; align-items: center; }
+  .sort-item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .sort-item.selected { border-color: var(--accent); background: var(--accent-light); transform: scale(1.02); box-shadow: 0 0 0 2px var(--accent-light); }
+  .sort-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .sort-column { background: var(--surface); border: 2px solid var(--accent-light); border-radius: 12px; padding: 10px; min-height: 150px; display: flex; flex-direction: column; transition: var(--transition); }
+  .sort-column.drag-over { border-color: var(--accent); background: rgba(74, 111, 165, 0.05); }
+  .col-header { font-weight: 600; font-size: 0.85rem; color: var(--accent); margin-bottom: 8px; text-align: center; border-bottom: 1px solid var(--accent-light); padding-bottom: 6px; }
+  .col-items { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .col-items .sort-item { margin: 0; width: 100%; box-sizing: border-box; }
+  @media (max-width: 600px) { .sort-columns { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -457,7 +470,140 @@ const COURSE = {
       }          // ← 2. Закрыт объект станции { id:8, ... }
       ]          // ← 3. Закрыт массив `stations` (все 8 станций)
     }          // ← 4. Закрыт объект урока `past_tenses`
-    };         // ← 5. Закрыт главный объект `COURSE`
+    },         // ← 5. Закрыт главный объект `COURSE`
+ 
+  used_to_basics: {
+  desc: "Master used to, be used to, get used to, and would through structured practice.",
+  stations: [
+    // 1. Categorization / Sorting
+    { 
+  id:1, 
+  title:"Categorization / Sorting", 
+  subtitle:"8 items · Drag & Drop", 
+  type:"sort", 
+  desc:"Распределите предложения по трём колонкам: A (Past Habit/State), B (Repeated Action), C (Familiarity/Adaptation).",
+  categories: [
+    { id: 'A', label: 'Past Habit / State' },
+    { id: 'B', label: 'Repeated Action' },
+    { id: 'C', label: 'Familiarity / Adaptation' }
+  ],
+  items:[
+    {text:"I used to live in a small village.", correct:"A"},
+    {text:"Every summer, we would go to the sea.", correct:"B"},
+    {text:"She is used to waking up early.", correct:"C"},
+    // ... ещё 5 карточек
+  ], 
+  ok:"Отлично! Вы чётко разделяете прошедшие привычки, повторяющиеся действия и текущую адаптацию.", 
+  err:"Проверьте: `would` не используется с глаголами состояния (`be, have, know`), а `be/get used to` всегда относятся к настоящему или процессу."
+},
+      {text:"I used to live in a small village.", correct:"A"},
+      {text:"Every summer, we would go to the sea.", correct:"B"},
+      {text:"She is used to waking up early.", correct:"C"},
+      {text:"I didn't use to like coffee.", correct:"A"},
+      {text:"He is getting used to the new software.", correct:"C"},
+      {text:"My grandfather would always tell us stories.", correct:"B"},
+      {text:"When I was a child, I would cry easily.", correct:"B"},
+      {text:"I am not used to driving on the left yet.", correct:"C"}
+    ], ok:"Отлично! Вы чётко разделяете прошедшие привычки, повторяющиеся действия и текущую адаптацию.", err:"Проверьте: `would` не используется с глаголами состояния (`be, have, know`), а `be/get used to` всегда относятся к настоящему или процессу."},
+
+    // 2. Multiple Choice
+    { id:2, title:"Multiple Choice", subtitle:"8 questions · Recognition", type:"mc", desc:"Выберите грамматически верный вариант.", q:[
+      {t:"I ___ afraid of spiders when I was little.", opts:["used to be","would be","am used to being"], c:0, ok:"`Used to` + state verb (be) — классика для описания прошлых состояний.", err:"`Would` нельзя использовать с глаголами состояния (`be, have, know, like`)."},
+      {t:"It took me a long time ___ used to the noise.", opts:["to get","to be","getting"], c:0, ok:"`Take time to get used to` — устойчивая конструкция процесса адаптации.", err:"После `to` в `get used to` идёт герундий или существительное, но здесь нужен инфинитив цели `to get`."},
+      {t:"She isn't used to ___ on the left.", opts:["drive","driving","drove"], c:1, ok:"`Be used to` + V-ing. Предлог `to` требует герундия.", err:"После `used to` (когда это прилагательное/предлог) всегда идёт `-ing` или noun."},
+      {t:"By next month, she ___ used to the new job.", opts:["will have got","is getting","used to"], c:0, ok:"Future Perfect (`will have got`) подчёркивает завершённый процесс к будущему моменту.", err:"`By next month` требует формы, показывающей завершённость к дедлайну."},
+      {t:"We ___ have a dog, but it died last year.", opts:["would","used to","are used to"], c:1, ok:"`Used to` + state verb (`have`) = владение в прошлом.", err:"`Would` не работает с `have` в значении владения. Только `used to`."},
+      {t:"Don't worry, you'll soon ___ it.", opts:["get used to","be used to","used to"], c:0, ok:"`Get used to` = процесс привыкания, который скоро завершится.", err:"`Be used to` означало бы, что вы уже привыкли. `Used to` — только про прошлое."},
+      {t:"I ___ eating spicy food now, but I hated it before.", opts:["am used to","got used to","would"], c:0, ok:"`Am used to` = текущее состояние привычки.", err:"`Got used to` описывало бы момент завершения в прошлом. Здесь акцент на `now`."},
+      {t:"When he was fit, he ___ run 10km every morning.", opts:["used to","would","is used to"], c:1, ok:"`Would` + repeated action = ностальгическое/регулярное действие в прошлом.", err:"Оба `used to` и `would` возможны, но `would` лучше передаёт оттенок повторяющегося ритуала."}
+    ]},
+
+    // 3. Error Correction
+    { id:3, title:"Error Correction", subtitle:"6 questions · Accuracy", type:"err", desc:"Найдите предложение без грамматических ошибок.", q:[
+      {opts:["I am used to wake up early now.","I am used to waking up early now.","I used to waking up early now."], c:1, ok:"`Be used to` + V-ing. Герундий обязателен.", err:"После `to` в `be used to` нужен герундий, а не инфинитив."},
+      {opts:["When I lived in Spain, I would have a dog.","When I lived in Spain, I used to have a dog.","I was used to have a dog."], c:1, ok:"`Used to` + state verb (`have`). `Would` здесь невозможен.", err:"`Would` не используется с глаголами состояния. Только `used to`."},
+      {opts:["She is getting used to drive on the left.","She is getting used to driving on the left.","She gets used to drive on the left."], c:1, ok:"`Get used to` + V-ing. Предлог `to` требует герундия.", err:"`To` здесь предлог, поэтому после него `-ing`."},
+      {opts:["He didn't used to like coffee.","He didn't use to like coffee.","He wouldn't used to like coffee."], c:1, ok:"Отрицание: `didn't use to` (без `d`).", err:"После `didn't` глагол возвращается в базовую форму: `use`, а не `used`."},
+      {opts:["I am used to the weather now.","I am get used to the weather now.","I used to the weather now."], c:0, ok:"`Be used to` + noun = состояние привычки.", err:"`Am get used to` — грамматический гибрид. Либо `am used to`, либо `am getting used to`."},
+      {opts:["I would know him well when we were students.","I used to know him well when we were students.","I was used to know him well."], c:1, ok:"`Know` — глагол состояния. Только `used to`.", err:"`Would` + state verb = ошибка. Используйте `used to`."}
+    ]},
+
+    // 4. Gap Fill
+    { id:4, title:"Gap Fill", subtitle:"8 gaps · Tense Focus", type:"gap", desc:"Вставьте правильную форму used to, be used to, get used to или would.", q:[
+      {t:'1. By 2010, he ___ (be) used to working from home.', kw:["had","been"], m:["had been"], ok:"Past Perfect (`had been`) для состояния, завершённого до 2010 года.", err:"`By + год в прошлом` требует Past Perfect."},
+      {t:'2. Don\'t worry, you ___ (get) used to the schedule soon.', kw:["will","get"], m:["will get"], ok:"Future Simple (`will get`) для предсказания/обещания.", err:"`Soon` указывает на будущее. Используйте `will`."},
+      {t:'3. When they first moved here, they ___ (not / be) used to the traffic.', kw:["were","not"], m:["were not","weren't"], ok:"Past Simple (`were not`) для описания факта в прошлом.", err:"Описание состояния в конкретный момент прошлого → Past Simple."},
+      {t:'4. I ___ (use to) ride a bike to school, but now I drive.', kw:["used","to"], m:["used to"], ok:"Past Habit (`used to`) + контраст с настоящим.", err:"Для прошлых привычек, которых сейчас нет, используем `used to`."},
+      {t:'5. She ___ (get) used to her new glasses after a few days.', kw:["got"], m:["got"], ok:"Past Simple (`got`) для завершённого процесса в прошлом.", err:"`After a few days` указывает на завершённое действие → Past Simple."},
+      {t:'6. He ___ (not / be) used to the cold winters when he lived in Russia.', kw:["was","not"], m:["was not","wasn't"], ok:"Past Simple negative для описания прошлого состояния.", err:"Состояние в прошлом → `wasn't used to`."},
+      {t:'7. We ___ (use to) eat out every Friday, but now we cook at home.', kw:["used","to"], m:["used to"], ok:"`Used to` для регулярного действия в прошлом, которое прекратилось.", err:"Контраст `but now` требует `used to`."},
+      {t:'8. It\'s strange now, but I ___ (get) used to it eventually.', kw:["will","get"], m:["will get"], ok:"Future Simple для предсказания адаптации.", err:"`Eventually` + будущее → `will get`."}
+    ]},
+
+    // 5. Word Order
+    { id:5, title:"Word Order", subtitle:"6 sentences · Syntax", type:"order", desc:"Соберите предложение, расставив слова в правильном порядке.", q:[
+      {w:["to","used","He","waking","is","up","early"], valid:["He is used to waking up early."], ok:"Порядок: S + be + used to + V-ing.", err:"Не забывайте `is` перед `used to`."},
+      {w:["would","always","She","forget","her","keys"], valid:["She would always forget her keys."], ok:"`Would` + adverb + V1 для повторяющихся действий.", err:"Наречие `always` обычно стоит после `would`."},
+      {w:["to","getting","They","are","the","new","rules"], valid:["They are getting used to the new rules."], ok:"Present Continuous процесса: are + getting used to + noun.", err:"`Getting` требует `are` перед ним."},
+      {w:["didn't","use","I","to","like","spinach"], valid:["I didn't use to like spinach."], ok:"Отрицание: didn't + use (без d) + to + V1.", err:"После `didn't` `use` пишется без `d`."},
+      {w:["used","I","to","live","in","London"], valid:["I used to live in London."], ok:"Past Habit: S + used to + V1.", err:"Порядок слов прямой, как в утверждении."},
+      {w:["is","she","used","to","driving","getting"], valid:["She is getting used to driving."], ok:"Present Continuous процесса адаптации.", err:"`Is getting` → процесс, `to driving` → предлог + герундий."}
+    ]},
+
+    // 6. Context & Meaning
+    { id:6, title:"Context & Meaning", subtitle:"7 questions · Nuance", type:"mc", desc:"Выберите вариант, который точно соответствует ситуации или правилу.", q:[
+      {t:"Situation: You've lived in London for 10 years. The rain doesn't bother you anymore.", opts:["I'm getting used to it.","I'm used to it.","I used to it."], c:1, ok:"`Be used to` = завершённое состояние привычки.", err:"`Getting used to` означало бы, что процесс ещё идёт. Здесь `doesn't bother` = факт."},
+      {t:"Rule Check: Why is \"I would be a teacher\" incorrect for a past state?", opts:["\"Would\" cannot be used with stative verbs.","\"Would\" is only for future."], c:0, ok:"`Would` требует динамического глагола (действия). `Be` — состояние.", err:"`Would` + state verb (`be, have, know, like`) = грамматическая ошибка."},
+      {t:"Situation: You just started a new job. The software is confusing.", opts:["I'm used to it.","I'm getting used to it.","I used to it."], c:1, ok:"`Getting used to` = процесс адаптации, который ещё не завершён.", err:"`Used to` означало бы, что вы уже разобрались. `Confusing` указывает на процесс."},
+      {t:"Difference: \"I used to smoke\" vs \"I would smoke\".", opts:["\"Used to\" implies I stopped; \"would\" focuses on repetition.","They are exactly the same."], c:0, ok:"`Used to` чётко указывает на прекращение привычки. `Would` просто констатирует повторение.", err:"`Used to` несёт смысл \"больше не делаю\", `would` — нейтральное повторение."},
+      {t:"Situation: Your friend moved to a hot country. He is sweating a lot.", opts:["He isn't used to it yet.","He didn't use to it.","He wouldn't it."], c:0, ok:"`Isn't used to` = текущее отсутствие привычки.", err:"`Didn't use to` относится к прошлому. Здесь акцент на `now`."},
+      {t:"You hate broccoli now, but as a kid you loved it.", opts:["I used to love it.","I would love it.","I am used to loving it."], c:0, ok:"`Used to` + state verb (`love`) = прошлое чувство/состояние.", err:"`Would` нельзя с `love`. `Am used to loving` означало бы, что вы привыкли к процессу любви сейчас."},
+      {t:"Which sentence implies a completed process of adaptation?", opts:["She is getting used to it.","She has got used to it.","She would get used to it."], c:1, ok:"Present Perfect (`has got`) подчёркивает результат процесса.", err:"`Is getting` — процесс идёт. `Would get` — гипотеза/прошлое."}
+    ]},
+
+    // 7. Dialogue Completion
+    { id:7, title:"Dialogue Completion", subtitle:"6 questions · Production", type:"mc", desc:"Выберите реплику, которая звучит наиболее естественно в диалоге.", q:[
+      {t:"A: \"Do you like the night shift?\" B: \"Not really, but I ___ it. Give me a week.\"", opts:["am used to","am getting used to","used to","would"], c:1, ok:"`Am getting used to` + срок (`a week`) = процесс, который скоро завершится.", err:"`Am used to` означало бы, что вам уже нравится. `Give me a week` указывает на процесс."},
+      {t:"A: \"Why are you wearing a coat inside?\" B: \"I ___ the heating yet. It's freezing!\"", opts:["haven't got used to","didn't use to","wouldn't"], c:0, ok:"Present Perfect Negative (`haven't got used to`) + `yet` = отсутствие результата к настоящему моменту.", err:"`Yet` требует Perfect. `Didn't use to` — про прошлое."},
+      {t:"A: \"How was school?\" B: \"Fine. We ___ math in the morning and art in the afternoon.\"", opts:["used to have","would have","are used to having"], c:1, ok:"`Would have` = ностальгическое описание школьного распорядка.", err:"`Used to have` тоже возможно, но `would` лучше передаёт рутину/расписание в воспоминаниях."},
+      {t:"A: \"I miss my old job.\" B: \"Really? I thought you ___ it.\"", opts:["weren't used to","didn't use to like","wouldn't like"], c:1, ok:"`Didn't use to like` = прошлое состояние/чувство, которое изменилось.", err:"`Weren't used to` означало бы, что вы не привыкли к условиям. Здесь речь о симпатии к работе."},
+      {t:"A: \"Is the new boss difficult?\" B: \"A bit. We're still ___ his management style.\"", opts:["getting used to","used to","would get used to"], c:0, ok:"`Still getting used to` = процесс адаптации ещё не завершён.", err:"`Used to` означало бы, что вы уже адаптировались. `Still` указывает на процесс."},
+      {t:"A: \"Do you still play piano?\" B: \"No, I ___ when I was younger.\"", opts:["used to","would","am used to"], c:0, ok:"`Used to` чётко указывает на прекращённую привычку.", err:"`Would` возможен, но `used to` сильнее подчёркивает, что сейчас вы не играете."}
+    ]},
+
+    // 8. Sentence Correction (Rewrite)
+    { id:8, title:"Sentence Correction", subtitle:"6 questions · Accuracy", type:"trans", desc:"В каждом предложении одна ошибка. Напишите исправленный вариант.", q:[
+      {t:"Исправьте: I am used to drive on the left now.", kw:["used","to","driving"], m:["I am used to driving on the left now.","I'm used to driving on the left now."], ok:"`Be used to` + V-ing. Предлог `to` требует герундия.", err:"После `used to` (прилагательное) нужен `-ing`, а не инфинитив."},
+      {t:"Исправьте: When I was young, I would have long hair.", kw:["used","to","have"], m:["When I was young, I used to have long hair."], ok:"`Have` (владение/состояние) — stative verb. Только `used to`.", err:"`Would` нельзя использовать с глаголами состояния. Замените на `used to`."},
+      {t:"Исправьте: She didn't used to like spicy food.", kw:["didn't","use","to"], m:["She didn't use to like spicy food."], ok:"Отрицание: `didn't` + базовая форма `use`.", err:"После `didn't` окончание `-d` убирается: `use`, а не `used`."},
+      {t:"Исправьте: It took him months to get used to live alone.", kw:["used","to","living"], m:["It took him months to get used to living alone."], ok:"`Get used to` + V-ing. `To` здесь предлог.", err:"После `get used to` всегда идёт герундий или существительное."},
+      {t:"Исправьте: He is getting used to the new schedule, but he isn't use to it yet.", kw:["used","to"], m:["He is getting used to the new schedule, but he isn't used to it yet."], ok:"`Be used to` (состояние) требует `d` в конце.", err:"В утвердительной форме состояния пишется `used to`, а не `use to`."},
+      {t:"Исправьте: We are used to get up early for work.", kw:["used","to","getting"], m:["We are used to getting up early for work."], ok:"`Be used to` + V-ing. Герундий обязателен.", err:"После `to` в `be used to` нужен `-ing`."}
+    ]},
+
+    // 9. Sentence Transformation
+    { id:9, title:"Sentence Transformation", subtitle:"6 questions · Production", type:"trans", desc:"Перефразируйте предложение, используя слово в скобках. Не меняйте смысл.", q:[
+      {t:"It feels normal to me now to live in a big city. (USED)", kw:["am","used","to","living"], m:["I am used to living in a big city.","I'm used to living in a big city."], ok:"`Be used to` + V-ing = текущее состояние привычки.", err:"Не забудьте `am` перед `used to` и `-ing` после `to`."},
+      {t:"We always went to that café on Fridays. (WOULD)", kw:["would","always","go"], m:["We would always go to that café on Fridays."], ok:"`Would` + adverb + V1 для повторяющихся действий в прошлом.", err:"`Would` заменяет `used to` для действий, но сохраняет оттенок рутины."},
+      {t:"She finds the new software difficult, but she is adapting. (GETTING)", kw:["getting","used","to"], m:["She is getting used to the new software."], ok:"`Get used to` + noun = процесс адаптации.", err:"Используйте Present Continuous: `is getting used to`."},
+      {t:"I haven't ridden a horse since I was a child. (USED)", kw:["used","to","ride"], m:["I used to ride a horse when I was a child."], ok:"`Used to` + V1 = привычка в прошлом, которой сейчас нет.", err:"`Since I was a child` → переводим в `when I was a child` + `used to`."},
+      {t:"The noise is strange to me; I need time to adapt. (USED)", kw:["used","to"], m:["I am not used to the noise yet."], ok:"`Not be used to` = отсутствие привычки.", err:"Добавьте `am not` перед `used to` для отрицания."},
+      {t:"He stopped smoking two years ago. (USED)", kw:["used","to","smoke"], m:["He used to smoke."], ok:"`Used to` автоматически подразумевает, что действие прекратилось.", err:"Достаточно `He used to smoke`. Контекст `stopped` уже заложен в конструкцию."}
+    ]},
+
+    // 10. Cloze Text
+    { id:10, title:"Cloze Text", subtitle:"1 text · 5 gaps · Flow", type:"cloze", desc:"Заполните пропуски в тексте правильной формой конструкций.", texts:[
+      { title:"Adapting to a New Life", parts:[
+        {type:"text", content:"When Mark first moved to Berlin, he "},{type:"gap", hint:"(not / be)", kw:["wasn't","was","not"], m:["wasn't","was not"], note:"Past Simple negative для описания состояния в начале."},
+        {type:"text", content:" used to the cold winters. He "},{type:"gap", hint:"(get)", kw:["got"], m:["got"], note:"Past Simple (`got`) для завершённого процесса адаптации."},
+        {type:"text", content:" used to it slowly, buying warmer clothes. In his hometown, he "},{type:"gap", hint:"(use to)", kw:["used","to"], m:["used to"], note:"Past Habit (`used to`) + инфинитив."},
+        {type:"text", content:" ride a bike everywhere, but here he "},{type:"gap", hint:"(would)", kw:["would"], m:["would"], note:"`Would` для повторяющегося действия в прошлом контексте."},
+        {type:"text", content:" take the U-Bahn because of the snow. After six months, he "},{type:"gap", hint:"(be)", kw:["was"], m:["was"], note:"Past Simple (`was`) для констатации завершённого состояния."},
+        {type:"text", content:" completely used to the rhythm. Now he tells friends: \"You'll get used to it too. It just takes time.\""}
+      ], ok:"Excellent! You perfectly tracked the timeline of adaptation.", err:"Review: `wasn't used to` (state), `got used to` (process), `used to/would` (past habits)." }
+    ]}
+  ]
+};
 
 // 🔹 Активный урок и текущие данные
 let currentLesson = 'past_tenses';
@@ -643,7 +789,8 @@ window.renderStationContent = function(s) {
     gap: "Впишите правильную форму глагола.",
     order: "Составьте предложение из слов в правильном порядке.",
     cloze: "Прочитайте текст и заполните пропуски.",
-    trans: "Переведите предложение, соблюдая грамматику."
+    trans: "Переведите предложение, соблюдая грамматику.",
+    sort: "Распределите предложения по колонкам в соответствии с их значением."
   };
   const descText = s.desc || defaultDesc[s.type] || "";
   if (descText) {
@@ -692,6 +839,13 @@ window.renderStationContent = function(s) {
       qBlock.innerHTML = `<div class="q-text">${q.t}</div><textarea class="input-field" id="trans-${s.id}-${i}" placeholder="Type translation..." style="min-height:80px; resize:none;"></textarea><button class="btn-check" onclick="window.checkTrans(${s.id}, ${i})">Check</button><div class="feedback" id="fb-${s.id}-${i}"></div>`;
       cont.appendChild(qBlock);
     });
+  } else if(s.type === 'sort') {
+    // ▼▼▼ Новый блок для Sorting ▼▼▼
+    cont.innerHTML += `<div class="sort-container"></div>
+                      <button class="btn-check" id="btn-sort-${s.id}" onclick="window.checkSort(${s.id})">✅ Check Sorting</button>
+                      <div class="feedback" id="fb-sort-${s.id}"></div>`;
+    window.renderSort(s.id, s.items, s.categories || []);
+    // ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲ ▲▲▲
   }
 }
 
@@ -748,7 +902,116 @@ window.renderMatch = function(id, pairs) {
     document.getElementById('mr').appendChild(el);
   });
 }
+// 📦 Sorting Exercise Logic
+window.renderSort = function(stId, items, categories) {
+  const cont = document.getElementById(`st-content-${stId}`);
+  const pool = document.createElement('div'); pool.className = 'sort-pool'; pool.id = `pool-${stId}`;
+  const colsWrap = document.createElement('div'); colsWrap.className = 'sort-columns';
 
+  // Default categories if not provided
+  const cols = categories.length ? categories : [
+    { id: 'A', label: 'Column A' }, { id: 'B', label: 'Column B' }, { id: 'C', label: 'Column C' }
+  ];
+
+  cols.forEach(c => {
+    const col = document.createElement('div'); col.className = 'sort-column'; col.dataset.col = c.id;
+    col.innerHTML = `<div class="col-header">${c.label}</div><div class="col-items"></div>`;
+    col.onclick = () => window.handleSortPlace(c.id, stId);
+    colsWrap.appendChild(col);
+  });
+
+  // Create items
+  items.forEach((item, idx) => {
+    const el = document.createElement('div'); el.className = 'sort-item';
+    el.textContent = item.text; el.dataset.correct = item.correct;
+    el.dataset.id = `item-${stId}-${idx}`;
+    el.onclick = (e) => { e.stopPropagation(); window.handleSortSelect(el, stId); };
+    pool.appendChild(el);
+  });
+
+  cont.querySelector('.sort-container').appendChild(pool);
+  cont.querySelector('.sort-container').appendChild(colsWrap);
+  
+  // Init state
+  window._sortState = window._sortState || {};
+  window._sortState[stId] = { selected: null, total: items.length };
+};
+
+window.handleSortSelect = function(el, stId) {
+  const state = window._sortState[stId];
+  // Deselect previous
+  if(state.selected) state.selected.classList.remove('selected');
+  // Select new
+  state.selected = el;
+  el.classList.add('selected');
+};
+
+window.handleSortPlace = function(colId, stId) {
+  const state = window._sortState[stId];
+  if(!state.selected) return;
+
+  const colEl = document.querySelector(`#st-content-${stId} .sort-column[data-col="${colId}"]`);
+  const targetArea = colEl.querySelector('.col-items');
+  
+  // Move item
+  targetArea.appendChild(state.selected);
+  state.selected.classList.remove('selected');
+  state.selected = null;
+};
+
+// Allow moving back to pool
+window.handleSortReturn = function(stId) {
+  const state = window._sortState[stId];
+  // Attach to existing items in columns
+  document.querySelectorAll(`#st-content-${stId} .col-items .sort-item`).forEach(item => {
+    item.onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById(`pool-${stId}`).appendChild(item);
+      item.onclick = (ev) => { ev.stopPropagation(); window.handleSortSelect(item, stId); };
+    };
+  });
+};
+
+window.checkSort = function(stId) {
+  const state = window._sortState[stId];
+  const station = stations.find(s => s.id === stId);
+  const columns = document.querySelectorAll(`#st-content-${stId} .sort-column`);
+  
+  let correct = 0;
+  let totalPlaced = 0;
+
+  columns.forEach(col => {
+    const colId = col.dataset.col;
+    col.querySelectorAll('.sort-item').forEach(item => {
+      totalPlaced++;
+      if(item.dataset.correct === colId) correct++;
+    });
+  });
+
+  const fb = document.getElementById(`fb-sort-${stId}`);
+  const btn = document.getElementById(`btn-sort-${stId}`);
+
+  if(totalPlaced < state.total) {
+    fb.className = 'feedback show error';
+    fb.innerHTML = `⚠️ Распределите все ${state.total} предложения перед проверкой.`;
+    return;
+  }
+
+  btn.disabled = true;
+  window.handleSortReturn(stId); // Enable return clicks after check
+
+  if(correct === state.total) {
+    fb.className = 'feedback show success';
+    fb.innerHTML = `🟢 ${station.ok}`;
+    document.getElementById(`st-${stId}`).classList.add('pop-success');
+    window.recordAnswer(stId, true);
+  } else {
+    fb.className = 'feedback show error';
+    fb.innerHTML = `🔴 ${station.err || `Верно: ${correct}/${state.total}. Попробуйте переместить неверные карточки обратно в пул и распределить заново.`}`;
+    document.getElementById(`st-${stId}`).classList.add('shake');
+    window.recordAnswer(stId, false);
+  }
+};
 window.renderClozeText = function(stId, tIdx, parts) {
   const cont = document.getElementById(`cloze-${stId}-${tIdx}`); cont.innerHTML = '';
   parts.forEach(part => {
