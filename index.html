@@ -530,6 +530,7 @@ let studentName = "";
 const calculateTotal = () => stations.reduce((sum, s) => {
   if (s.type === 'match') return sum + s.q[0].pairs.length;
   if (s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
+  if (s.type === 'sort') return sum + s.items.length;  // ← Добавлено для sort
   return sum + (s.q ? s.q.length : 0);
 }, 0);
 let globalStats = { q:0, c:0, w:0, total: calculateTotal() };
@@ -616,27 +617,31 @@ window.renderLessonMenu = function() {
 };
 
 window.selectLesson = function(lessonKey) {
+  const lesson = COURSE[lessonKey];
+  
+  if (!lesson || !lesson.stations || !Array.isArray(lesson.stations)) {
+    console.error("❌ Ошибка загрузки урока:", lessonKey, lesson);
+    alert("Не удалось загрузить урок. Проверьте консоль (F12).");
+    return;
+  }
+
   currentLesson = lessonKey;
-  stations = COURSE[lessonKey].stations; // ← 1. Сначала обновляем stations
-  
-  // 2. Теперь пересчитываем total с новым значением stations
-  globalStats = { 
-    q:0, 
-    c:0, 
-    w:0, 
-    total: stations.reduce((sum, s) => {
-      if (s.type === 'match') return sum + s.q[0].pairs.length;
-      if (s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
-      return sum + (s.q ? s.q.length : 0);
-    }, 0)
-  };
-  
-  stationAttempts = {}; 
+  stations = lesson.stations;
+
+  // Считаем total с учётом всех типов, включая sort
+  const total = stations.reduce((sum, s) => {
+    if (s.type === 'match') return sum + s.q[0].pairs.length;
+    if (s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
+    if (s.type === 'sort') return sum + s.items.length;  // ← Добавлено
+    return sum + (s.q ? s.q.length : 0);
+  }, 0);
+
+  globalStats = { q: 0, c: 0, w: 0, total: total };
+  stationAttempts = {};
   stationProgress = {};
-  
+
   window.updateTracker();
   
-  // Переключение экранов
   document.getElementById('lesson-menu-screen').classList.add('hidden');
   document.getElementById('grid-screen').classList.remove('hidden');
   window.renderGrid();
@@ -670,14 +675,36 @@ window.goHome = function() {
 }
 
 window.renderGrid = function() {
-  const grid = document.getElementById('grid-screen'); grid.innerHTML = '';
+  const grid = document.getElementById('grid-screen'); 
+  if (!grid) return;
+  grid.innerHTML = '';
+  
+  if (!stations || !Array.isArray(stations)) {
+    console.warn("⚠️ renderGrid вызван с пустыми данными:", stations);
+    return;
+  }
+
   stations.forEach((s, i) => {
-    const total = s.type==='match' ? s.q[0].pairs.length : (s.type==='cloze' ? s.texts.reduce((sum,t)=>sum+t.parts.filter(p=>p.type==='gap').length,0) : s.q.length);
-    const card = document.createElement('div'); card.className = 'grid-card'; card.onclick = () => window.startExercise(s.id);
+    // ✅ Правильный подсчёт total для ВСЕХ типов станций
+    let total = 0;
+    if (s.type === 'match') {
+      total = s.q[0].pairs.length;
+    } else if (s.type === 'cloze') {
+      total = s.texts.reduce((sum, t) => sum + t.parts.filter(p => p.type === 'gap').length, 0);
+    } else if (s.type === 'sort') {
+      total = s.items.length;  // ← Ключевое добавление для Sorting
+    } else {
+      total = s.q ? s.q.length : 0;
+    }
+    
+    const card = document.createElement('div'); 
+    card.className = 'grid-card'; 
+    card.onclick = () => window.startExercise(s.id);
     card.style.setProperty('--tint', 1 - (i * 0.12));
     card.innerHTML = `<div class="grid-num">0${s.id}</div><div class="grid-icon" data-icon-id="${s.id}"></div><div class="grid-title">${s.title}</div><div class="grid-meta">${s.subtitle} · ${total} points</div><button class="grid-btn">Start</button>`; 
     grid.appendChild(card);
-  }); window.applyTheme(currentTheme);
+  }); 
+  window.applyTheme(currentTheme);
 }
 
 window.renderAllStations = function(startBlockId) {
