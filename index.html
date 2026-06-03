@@ -617,10 +617,20 @@ window.renderLessonMenu = function() {
 
 window.selectLesson = function(lessonKey) {
   currentLesson = lessonKey;
-  stations = COURSE[lessonKey].stations; // ← теперь .stations
+  stations = COURSE[lessonKey].stations; // ← 1. Сначала обновляем stations
   
-  // Сброс прогресса для нового урока
-  globalStats = { q:0, c:0, w:0, total: calculateTotal() };
+  // 2. Теперь пересчитываем total с новым значением stations
+  globalStats = { 
+    q:0, 
+    c:0, 
+    w:0, 
+    total: stations.reduce((sum, s) => {
+      if (s.type === 'match') return sum + s.q[0].pairs.length;
+      if (s.type === 'cloze') return sum + s.texts.reduce((acc, t) => acc + t.parts.filter(p => p.type === 'gap').length, 0);
+      return sum + (s.q ? s.q.length : 0);
+    }, 0)
+  };
+  
   stationAttempts = {}; 
   stationProgress = {};
   
