@@ -711,8 +711,26 @@ window.renderAllStations = function(startBlockId) {
   const cont = document.getElementById('stations-container'); cont.innerHTML = '';
   stations.forEach((s, i) => {
     stationAttempts[s.id] = stationAttempts[s.id] || [];
-    stationProgress[s.id] = stationProgress[s.id] || { answered: 0, correct: 0, total: s.type==='match' ? s.q[0].pairs.length : (s.type==='cloze' ? s.texts.reduce((sum,t)=>sum+t.parts.filter(p=>p.type==='gap').length,0) : s.q.length), completed: false };
-    const total = stationProgress[s.id].total;
+    
+    // ✅ Безопасный подсчёт total для ВСЕХ типов станций
+    let total = 0;
+    if (s.type === 'match') {
+      total = s.q[0].pairs.length;
+    } else if (s.type === 'cloze') {
+      total = s.texts.reduce((sum, t) => sum + t.parts.filter(p => p.type === 'gap').length, 0);
+    } else if (s.type === 'sort') {
+      total = s.items.length;  // ← Ключевое добавление для Sorting
+    } else {
+      total = s.q ? s.q.length : 0;
+    }
+    
+    stationProgress[s.id] = stationProgress[s.id] || { 
+      answered: 0, 
+      correct: 0, 
+      total: total, 
+      completed: false 
+    };
+    
     const div = document.createElement('div'); div.className = 'station'; div.id = `st-${s.id}`;
     div.innerHTML = `<div class="station-header" onclick="window.toggleStation(${s.id})"><div class="station-num">0${s.id}</div><div class="station-icon" data-icon-id="${s.id}"></div><div class="station-info"><div class="station-title">${s.title}</div><div class="station-sub">${s.subtitle}</div></div><div class="station-badge" id="prog-${s.id}">0/${total}</div></div><div class="station-content" id="st-content-${s.id}"></div><div class="station-footer"><span style="font-size:0.8rem; color:var(--text-light);" id="footer-attempt-${s.id}"> Attempts: None</span><button class="btn-retry" onclick="window.retryStation(${s.id})">🔄 Retry</button></div>`; 
     cont.appendChild(div);
@@ -1117,10 +1135,23 @@ window.updateTracker = function() {
 }
 window.retryStation = function(id) {
   const s = stations.find(x=>x.id===id);
-  stationProgress[id] = { answered: 0, correct: 0, total: s.type==='match' ? s.q[0].pairs.length : (s.type==='cloze' ? s.texts.reduce((sum,t)=>sum+t.parts.filter(p=>p.type==='gap').length,0) : s.q.length), completed: false };
+  
+  // ✅ Безопасный подсчёт total
+  let total = 0;
+  if (s.type === 'match') {
+    total = s.q[0].pairs.length;
+  } else if (s.type === 'cloze') {
+    total = s.texts.reduce((sum, t) => sum + t.parts.filter(p => p.type === 'gap').length, 0);
+  } else if (s.type === 'sort') {
+    total = s.items.length;
+  } else {
+    total = s.q ? s.q.length : 0;
+  }
+  
+  stationProgress[id] = { answered: 0, correct: 0, total: total, completed: false };
   window.renderStationContent(s);
   document.getElementById(`footer-attempt-${id}`).textContent = `📊 Attempts: None`;
-  document.getElementById(`prog-${id}`).textContent = `0/${stationProgress[id].total}`;
+  document.getElementById(`prog-${id}`).textContent = `0/${total}`;
   window.updateTracker(); document.getElementById(`st-${id}`).classList.add('open');
 }
 
